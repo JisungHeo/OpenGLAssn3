@@ -4,14 +4,16 @@
 #include <glm/gtc/matrix_transform.hpp>
 //glm::mat4 MVP;
 extern GLuint ModelID;
-Gun::Gun()
+Gun::Gun(int x, int y)
 {
+	this->x = x;
+	this->y = y;
 }
 
 
 void Gun::draw() {
 	glBindVertexArray(VertexArrayID);
-	glm::mat4 Model = 
+	glm::mat4 Model = glm::translate(glm::mat4(1.0f), glm::vec3(x, y, 0)) *
 		/*scale*/glm::scale(glm::mat4(1.0f), glm::vec3(10.0f));
 
 	glUniformMatrix4fv(ModelID, 1, GL_FALSE, &Model[0][0]);
