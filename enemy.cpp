@@ -2,14 +2,19 @@
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/mat4x4.hpp>
-#include "player.hpp"
 #include "objloader.hpp"
+#include "player.hpp"
+#define CellSize 200
+#define ArrSize 100
 #define PI 3.141592f
 ///using namespace std;
 extern GLuint ModelID;
 extern GLuint ColorID;
 extern glm::mat4 MVP;
 extern GLuint MVPID;
+extern bool map_enemy[ArrSize][ArrSize];
+vector<Enemy> Enemy::vectorEnemy;
+
 Enemy::Enemy(float x, float y) {
 	this->x = x;
 	this->y = y;
@@ -60,6 +65,26 @@ void Enemy::initVAO() {
 	Enemy::dummy_obj_size = Player::dummy_obj_size;
 }
 
+
 void Enemy::initVertices() {
 	bool res = loadOBJ3("obj_files/Skeleton.obj", vertices, uvs);
+}
+
+void Enemy::initMap() {
+	for(int i=0;i<4;i++)
+		for (int j = 0; j < 4; j++) {
+			map_enemy[i*25+5][j*25+5] = 1;
+			map_enemy[i * 25 + 5][j * 25 + 19] = 1;
+			map_enemy[i * 25 + 19][j * 25 + 5] = 1;
+			map_enemy[i * 25 + 19][j * 25 + 19] = 1;
+			map_enemy[i * 25 + 12][j * 25 + 12] = 1;
+		}
+	for (int i = 0; i < ArrSize; i++)
+		for (int j = 0; j < ArrSize; j++)
+			if(map_enemy[i][j])
+				Enemy::vectorEnemy.push_back(Enemy(i*CellSize, j*CellSize));
+}
+void Enemy::drawAll() {
+	for (int i = 0; i < vectorEnemy.size(); i++)
+		vectorEnemy[i].draw();
 }

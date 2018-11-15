@@ -18,4 +18,7 @@ public:
 	vector<glm::vec3> vertices;
 	vector<glm::vec2> uvs;
 	GLuint VertexArrayID;
+	static void initMap();
+	static vector<Enemy> vectorEnemy;
+	static void drawAll();
 };

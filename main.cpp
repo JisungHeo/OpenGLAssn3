@@ -115,6 +115,7 @@ void display() {
 	enemy.draw();
 	Wall::drawAll();
 	drawStatusBar();
+	Enemy::drawAll();
 	glutSwapBuffers();
 }
 
@@ -164,8 +165,10 @@ void init() {
 	Player::initVAO();
 	Enemy::initVAO();
 	Wall::initVAO();
-	Player::player = Player(100, 100);
+	Player::player = Player(50*200, 50*200);
+	Enemy::initMap();
 	Wall::initMap();
+	
 	glutSwapBuffers();
 }
 void main(int argc, char **argv) {  	

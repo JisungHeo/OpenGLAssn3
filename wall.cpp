@@ -1,6 +1,9 @@
 #include "wall.hpp"
 #include <glm/ext/matrix_transform.hpp>
-#include "map.hpp"
+#define CellSize 200
+#define ArrSize 100
+
+extern bool map_wall[ArrSize][ArrSize];
 extern GLuint ModelID;
 extern GLuint ColorID;
 vector<Wall> Wall::vectorWall;
@@ -51,10 +54,31 @@ void Wall::initVAO() {
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 }
 
+void horizontalWall(int i, int j, int n) {
+	for (int k = 0; k < n; k++)
+		map_wall[i][j + k] = 1;
+}
+
+void verticalWall(int i, int j, int n) {
+	for (int k = 0; k < n; k++)
+		map_wall[i + k][j] = 1;
+}
+
 void Wall::initMap() {
 	for (int i = 0; i < ArrSize; i++) {
 		map_wall[i][0] = map_wall[0][i] = map_wall[i][ArrSize-1] = map_wall[ArrSize-1][i] = 1;
 	}
+	for (int i=0;i<4;i++)
+		for (int j = 0; j < 4; j++) {
+			horizontalWall(i * 25 + 9, j * 25 + 3, 7);
+			horizontalWall(i * 25 + 9, j * 25 + 15, 7);
+			horizontalWall(i * 25 + 15, j * 25 + 3, 7);
+			horizontalWall(i * 25 + 15, j * 25 + 15, 7);
+			verticalWall(i * 25 + 3, j * 25 + 9, 7);
+			verticalWall(i * 25 + 3, j * 25 + 15, 7);
+			verticalWall(i * 25 + 15, j * 25 + 9, 7);
+			verticalWall(i * 25 + 15, j * 25 + 15, 7);
+		}
 	for (int i = 0; i < ArrSize; i++)
 		for (int j = 0; j < ArrSize; j++)
 			if (map_wall[i][j])
