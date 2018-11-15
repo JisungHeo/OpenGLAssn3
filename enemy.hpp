@@ -7,18 +7,21 @@ using namespace std;
 class Enemy {
 public:
 	Enemy(float x, float y);
-	float x;
-	float y;
-	static GLuint vertexArrayID;
 	void draw();
 	void draw2();
 	void initVertices();
-	static int dummy_obj_size;
 	static void initVAO();
+	static void initMap();
+	static void drawAll();
+	bool wallCollision(int x, int y);
+	bool bulletCollision(int x, int y);
+
+	static vector<Enemy> vectorEnemy;
 	vector<glm::vec3> vertices;
 	vector<glm::vec2> uvs;
 	GLuint VertexArrayID;
-	static void initMap();
-	static vector<Enemy> vectorEnemy;
-	static void drawAll();
+	float x;
+	float y;
+	static GLuint vertexArrayID;
+	static int dummy_obj_size;
 };

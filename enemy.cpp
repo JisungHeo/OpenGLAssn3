@@ -4,15 +4,20 @@
 #include <glm/mat4x4.hpp>
 #include "objloader.hpp"
 #include "player.hpp"
+#include "map.hpp"
+
 #define CellSize 200
 #define ArrSize 100
 #define PI 3.141592f
 ///using namespace std;
+
 extern GLuint ModelID;
 extern GLuint ColorID;
 extern glm::mat4 MVP;
 extern GLuint MVPID;
 extern bool map_enemy[ArrSize][ArrSize];
+extern bool map_wall[ArrSize][ArrSize];
+extern bool map_bullet[ArrSize][ArrSize];
 vector<Enemy> Enemy::vectorEnemy;
 
 Enemy::Enemy(float x, float y) {
@@ -56,8 +61,6 @@ void Enemy::draw2() {
 
 	MVP = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 1000.0f) *
 		glm::lookAt(glm::vec3(600.0f, 0.0f, 0.0f), glm::vec3(0, 0, 0), glm::vec3(0.0f, 1.0f, 0.0f));
-		/*scale     */	//glm::scale(glm::mat4(1.0f), glm::vec3(30.0f));
-	//glUniformMatrix4fv(MVPID, 1, GL_FALSE, &MVP[0][0]);
 }
 
 void Enemy::initVAO() {
@@ -87,4 +90,13 @@ void Enemy::initMap() {
 void Enemy::drawAll() {
 	for (int i = 0; i < vectorEnemy.size(); i++)
 		vectorEnemy[i].draw();
+}
+
+bool Enemy::wallCollision(int x, int y)
+{
+	return map_wall[x][y] == 1;
+}
+
+bool Enemy::bulletCollision(int x, int y) {
+	return map_bullet[x][y] == 1;
 }

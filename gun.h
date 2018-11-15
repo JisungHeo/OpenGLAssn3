@@ -12,10 +12,7 @@ public:
 	Gun();
 	void draw();
 	void initVAO();
-	void initVertices();
-	vector<glm::vec3> vertices;
-	vector<glm::vec2> uvs;
-	vector<glm::vec3> normals;
 	GLuint VertexArrayID;
+	int dummy_obj_size;
 };
 

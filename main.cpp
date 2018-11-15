@@ -114,8 +114,9 @@ void display() {
 	Enemy enemy(200.0f,0.0f);
 	enemy.draw();
 	Wall::drawAll();
-	drawStatusBar();
 	Enemy::drawAll();
+	drawStatusBar();
+	
 	glutSwapBuffers();
 }
 

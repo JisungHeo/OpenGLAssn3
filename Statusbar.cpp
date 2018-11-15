@@ -16,7 +16,7 @@ extern int game_round;*/
 extern GLuint ColorID;
 //extern glm::mat4 model_view;
 //extern glm::mat4 projection;
-extern glm::mat4 MVP;
+
 extern GLuint MVPID;
 // function for printing text
 // reference : http://programmingexamples.net/wiki/OpenGL/Text 
@@ -74,8 +74,8 @@ void drawStatusBar()
 	glViewport(0, 0, width, height / 5);
 	projection = glm::ortho(0.0f, 500.0f, 0.0f, 100.0f);
 	model_view = glm::mat4(1.0);
-	MVP = projection * model_view;
-	glUniformMatrix4fv(MVPID, 1, GL_FALSE, &MVP[0][0]);
+	//MVP = projection * model_view;
+	//glUniformMatrix4fv(MVPID, 1, GL_FALSE, &MVP[0][0]);
 	glUniform4f(ColorID, 1.0f, 1.0f, 0.0f, 1.0f);
 
 	glMatrixMode(GL_PROJECTION);
@@ -103,7 +103,7 @@ void drawStatusBar()
 	writeTimerInfo();
 	writeRoundInfo();
 }
-
+/*
 void drawRect() {
 	GLuint VertexArrayID;
 	vector<glm::vec3> RectVertices = {
@@ -132,4 +132,4 @@ void drawRect() {
 	MVP = glm::ortho(0.0f, 500.0f, 0.0f, 100.0f)*
 			  glm::lookAt(glm::vec3(600.0f, 0.0f, 0.0f), glm::vec3(0, 0, 0), glm::vec3(0.0f, 1.0f, 0.0f));
 	glUniformMatrix4fv(MVPID, 1, GL_FALSE, &MVP[0][0]);
-}
+}*/
