@@ -2,6 +2,7 @@
 #include <GL/glew.h>
 #include <GL/freeglut.h>
 #include <vector>
+
 using namespace std;
 class Wall {
 public:

@@ -9,6 +9,9 @@
 #include "wall.hpp"
 #include "player.hpp"
 #include "enemy.hpp"
+#include <cmath>
+#define CellSize 200
+
 GLuint programID;
 GLuint ProjectionID;
 GLuint ViewID;
@@ -22,17 +25,50 @@ unsigned int dummy_obj_size;
 
 //Player player(0.0f,0.0f);
 using namespace std; 
+
+glm::mat4 cameraMove() {
+	float dx=0.0f;
+	float dy=0.0f;
+	float dhx = 0.0f;
+	float dhy = 0.0f;
+	if (Player::player.direction == 0.0f) {
+		dx = 1000.0f;
+		dy = 0.0f;
+		dhx = 20.0f;
+		dhy = 0.0f;
+	}
+	else if (Player::player.direction == 90.0f) {
+		dx = 0.0f;
+		dy = 1000.0f;
+		dhx = 0.0f;
+		dhy = 20.0f;
+	}
+	else if (Player::player.direction == 180.0f) {
+		dx = -1000.0f;
+		dy = 0.0f;
+		dhx = -20.0f;
+		dhy = 0.0f;
+	}
+	else if (Player::player.direction == 270.0f) {
+		dx = 0.0f;
+		dy = -1000.0f;
+		dhx = 0.0f;
+		dhy = -20.0f;
+	}
+	return glm::lookAt(glm::vec3(Player::player.x+dhx, Player::player.y+dhy, 170.0f),
+		glm::vec3(Player::player.x+dx, Player::player.y+dy, 169.0f),
+		glm::vec3(0.0f, 0.0f, 1.0f));
+}
 void display() {
 	
 	glClear(GL_COLOR_BUFFER_BIT);
 	glUseProgram(programID);
 	glm::mat4 Projection = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 10000.0f);
-	glm::mat4 View = glm::lookAt(glm::vec3(0.0f, 0.0f, 10000.0f), glm::vec3(0, 0, 0), glm::vec3(0.0f, 1.0f, 0.0f));
+	glm::mat4 View = cameraMove();
 	glUniformMatrix4fv(ProjectionID, 1, GL_FALSE, &Projection[0][0]);
 	glUniformMatrix4fv(ViewID, 1, GL_FALSE, &View[0][0]);
 	glUniform4f(ColorID, 0.0f, 1.0f, 0.0f, 1.0f);
-	Player player(0.0f, 0.0f);
-	player.draw();
+	Player::player.draw();
 	Enemy enemy(200.0f,0.0f);
 	enemy.draw();
 	Wall::drawAll();
@@ -45,16 +81,23 @@ void reshape(int w, int h) {
 }
 
 void keyboard(unsigned char key, int x, int y) {
+	float angle;
 	switch (key) {
 	case 'w':
+		Player::player.foward();
 		break;
 
 	case 'a':
+		Player::player.rotate(90.0f);
 		break;
 
 	case 'd':
+		Player::player.rotate(-90.0f);
 		break;
 	}
+	
+	printf("%f\n", Player::player.direction);
+	glutPostRedisplay();
 }
 
 void timer(int time) {
@@ -73,6 +116,7 @@ void init() {
 	Player::initVAO();
 	Enemy::initVAO();
 	Wall::initVAO();
+	Player::player = Player(100, 100);
 	Wall::initMap();
 	glutSwapBuffers();
 }

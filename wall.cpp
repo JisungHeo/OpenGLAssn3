@@ -53,10 +53,12 @@ void Wall::initVAO() {
 
 void Wall::initMap() {
 	for (int i = 0; i < ArrSize; i++) {
-		map_wall[i][0] = map_wall[0][i] = 1;
-		Wall::vectorWall.push_back(Wall(i*CellSize, 0*CellSize));
-		Wall::vectorWall.push_back(Wall(0*CellSize, i*CellSize));
+		map_wall[i][0] = map_wall[0][i] = map_wall[i][ArrSize-1] = map_wall[ArrSize-1][i] = 1;
 	}
+	for (int i = 0; i < ArrSize; i++)
+		for (int j = 0; j < ArrSize; j++)
+			if (map_wall[i][j])
+				Wall::vectorWall.push_back(Wall(i*CellSize, j*CellSize));
 }
 
 void Wall::drawAll() {
