@@ -6,29 +6,37 @@
 #include "objloader.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 #include "shader.hpp"
+#include "wall.hpp"
+#include "player.hpp"
+#include "enemy.hpp"
 
 GLuint programID;
-GLuint MVPID;
+GLuint ProjectionID;
+GLuint ViewID;
+GLuint ModelID;
 GLuint ColorID;
 GLuint VertexArrayID;
 glm::mat4 MVP;
 GLuint vertexbuffer;
 unsigned int dummy_obj_size;
+
+//Player player(0.0f,0.0f);
 using namespace std; 
 void display() {
 	
 	glClear(GL_COLOR_BUFFER_BIT);
 	glUseProgram(programID);
-	glBindVertexArray(VertexArrayID);
-	MVP = glm::perspective(glm::radians(45.0f), 4.0f / 3, 0.1f, 1000.0f) *
-		glm::lookAt(glm::vec3(0.0f, 100.0f, 600.0f), glm::vec3(3.19805, 100.331, 0), glm::vec3(0.0f, 1.0f, 0.0f)) *
-		glm::mat4(1.0f);
-	glUniformMatrix4fv(MVPID, 1, GL_FALSE, &MVP[0][0]);
+	glm::mat4 Projection = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 1000.0f);
+	glm::mat4 View = glm::lookAt(glm::vec3(0.0f, 0.0f, 800.0f), glm::vec3(0, 0, 0), glm::vec3(0.0f, 1.0f, 0.0f));
+	glUniformMatrix4fv(ProjectionID, 1, GL_FALSE, &Projection[0][0]);
+	glUniformMatrix4fv(ViewID, 1, GL_FALSE, &View[0][0]);
 	glUniform4f(ColorID, 0.0f, 1.0f, 0.0f, 1.0f);
-	for (int i = 0; i < dummy_obj_size/4; i++) {
-		glDrawArrays(GL_LINE_LOOP, i * 4, 4);
-	}
-	glBindVertexArray(0);
+	Player player(0.0f, 0.0f);
+	player.draw();
+	Enemy enemy(200.0f,0.0f);
+	enemy.draw();
+	Wall wall(0, 0);
+	wall.draw();
 	
 	glutSwapBuffers();
 }
@@ -37,39 +45,34 @@ void reshape(int w, int h) {
 	glViewport(0, 0, w, h);
 }
 
+void keyboard(unsigned char key, int x, int y) {
+	switch (key) {
+	case 'w':
+		break;
+
+	case 'a':
+		break;
+
+	case 'd':
+		break;
+	}
+}
+
+void timer(int time) {
+	time++;
+}
+
 void init() {
 	programID = LoadShaders("myVS.glsl", "myFS.glsl");
 	
-	MVPID = glGetUniformLocation(programID, "MVP");
+	ProjectionID = glGetUniformLocation(programID, "Projection");
+	ViewID = glGetUniformLocation(programID, "View");
+	ModelID = glGetUniformLocation(programID, "Model");
 	ColorID = glGetUniformLocation(programID, "fragmentColor");
-	vector<glm::vec3> vertices;
-	vector<glm::vec2> uvs;
-	vector<glm::vec3> normals; // Won't be used at the moment.
-	bool res = loadOBJ("obj_files/dummy_obj.obj", vertices, uvs, normals);
-	glUseProgram(programID);
 	
-	
-
-	glGenVertexArrays(1, &VertexArrayID);
-	glBindVertexArray(VertexArrayID);
-
-	
-	glGenBuffers(1, &vertexbuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &vertices[0], GL_STATIC_DRAW);
-	glUseProgram(programID);
-
-	glEnableVertexAttribArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-	glVertexAttribPointer(
-		0,                  // attribute
-		3,                  // size
-		GL_FLOAT,           // type
-		GL_FALSE,           // normalized?
-		0,                  // stride
-		(void*)0            // array buffer 
-	);
-	dummy_obj_size = vertices.size();
+	Player::initVAO();
+	Enemy::initVAO();
+	Wall::initVAO();
 	glutSwapBuffers();
 }
 void main(int argc, char **argv) {  	
@@ -80,7 +83,9 @@ void main(int argc, char **argv) {
 	glutCreateWindow("Hello OpenGL"); 
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
-	glClearColor(0.3f, 0.3f, 0.3f, 1.0f); 
+	glutKeyboardFunc(keyboard);
+	glutTimerFunc(0, timer, 0);
+	glClearColor(1.0f, 1.0f, 1.0f, 1.0f); 
 	glewInit();
 	init();
 	glutMainLoop(); 
