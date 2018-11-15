@@ -3,6 +3,7 @@
 #include <GL/glew.h>
 #include <GL/freeglut.h>
 #include <vector>
+#define ArrSize 100
 class Player {
 public:
 	Player(float x, float y);
@@ -16,4 +17,8 @@ public:
 	static int dummy_obj_size;
 	void foward();
 	void rotate(float angle);
+	bool collision(bool map[ArrSize][ArrSize], int x, int y);
+	bool wallCollision(int x, int y);
+	bool enemyCollision();
+	bool itemCollision(int x, int y);
 };

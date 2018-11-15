@@ -1,4 +1,4 @@
-/*#pragma once
+#pragma once
 #include <GL/glew.h>
 #include <GL/glut.h>
 #include <GL/freeglut.h>
@@ -8,15 +8,14 @@ using namespace std;
 class Item
 {
 public:
-	Item(int type, float a, float y, float z);
+	Item(int type, float x, float y);
 	void draw();
 	bool playerCollision();
-	void initVAO();
-	void initVertices();
-
 	float x,y,z;
 	int type;// subclasses
-	vector<glm::vec3> vertices;
-	vector<glm::vec2> uvs;
-	GLuint VertexArrayID;
-};*/
+	static GLuint vertexArrayID;
+	static vector<Item> vectorItem;
+	void initVAO();
+	static void initMap();
+	static void drawAll();
+};

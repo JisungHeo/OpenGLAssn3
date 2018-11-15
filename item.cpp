@@ -1,13 +1,18 @@
-/*#include "item.h"
+#include "item.hpp"
 #include "objloader.hpp"
 #include <cmath>
 #include <glm/mat4x4.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#define PI 3.14159
-glm::mat4 MVP;
-GLuint MVPID;
 
-Item::Item(int type, float a, float y, float z)
+#define PI 3.14159
+extern GLuint ModelID;
+extern GLuint ColorID;
+extern map_item
+GLuint Item::vertexArrayID;
+static int verticesSize;
+
+
+Item::Item(int type, float x, float y)
 {
 	this->type = type;
 	this->x = x;
@@ -15,9 +20,14 @@ Item::Item(int type, float a, float y, float z)
 }
 
 void Item::initVAO() {
+	vector<glm::vec3> vertices;
+	vector<glm::vec2> uvs;
+	bool res = loadOBJ3("obj_files/item.obj", vertices, uvs);
+	glGenVertexArrays(1, &vertexArrayID);
+	glBindVertexArray(vertexArrayID);
 	GLuint vertexbuffer;
-	glGenVertexArrays(1, &VertexArrayID);
-	glBindVertexArray(VertexArrayID);
+	glGenVertexArrays(1, &vertexArrayID);
+	glBindVertexArray(vertexArrayID);
 	glGenBuffers(1, &vertexbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
 	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &vertices[0], GL_STATIC_DRAW);
@@ -30,17 +40,18 @@ void Item::initVAO() {
 		0,                  // stride
 		(void*)0            // array buffer 
 	);
+	verticesSize = vertices.size();
 }
 
-void Item::initVertices() {
-	bool res = loadOBJ3("obj_files/bullet.obj", vertices,uvs);
-}
 
 void Item::draw() {
-	MVP = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 1000.0f) *
+	glBindVertexArray(vertexArrayID);
+	glm::mat4 Model = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 1000.0f) *
 		glm::lookAt(glm::vec3(600.0f, 0.0f, 0.0f), glm::vec3(0, 0, 0), glm::vec3(0.0f, 1.0f, 0.0f)) *
-		/*scale     */	//glm::scale(glm::mat4(1.0f), glm::vec3(30.0f));
-	/*glUniformMatrix4fv(MVPID, 1, GL_FALSE, &MVP[0][0]);
+		glm::scale(glm::mat4(1.0f), glm::vec3(30.0f));
+	glUniformMatrix4fv(ModelID, 1, GL_FALSE, &Model[0][0]);
+	
+	glBindVertexArray(0);
 }
 
 bool Item::playerCollision()
@@ -48,4 +59,9 @@ bool Item::playerCollision()
 	//**thinking point
 	return false;
 	//return (this->x == player.x) && (this->y == player.y);
-}*/
+}
+
+void Item::initMap() {
+	
+}
+void Item::drawAll();

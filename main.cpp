@@ -11,7 +11,7 @@
 #include "wall.hpp"
 #include "player.hpp"
 #include "enemy.hpp"
-#include "statusbar.h"
+#include "statusbar.hpp"
 #include <cmath>
 #define CellSize 200
 using namespace std;
@@ -24,7 +24,6 @@ GLuint ViewID;
 GLuint ModelID;
 GLuint ColorID;
 GLuint VertexArrayID;
-glm::mat4 MVP;
 GLuint vertexbuffer;
 unsigned int dummy_obj_size;
 bool third_person_view = false;
@@ -114,8 +113,9 @@ void display() {
 	Enemy enemy(200.0f,0.0f);
 	enemy.draw();
 	Wall::drawAll();
-	drawStatusBar();
 	Enemy::drawAll();
+	drawStatusBar();
+	
 	glutSwapBuffers();
 }
 

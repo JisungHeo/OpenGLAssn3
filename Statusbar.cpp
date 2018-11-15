@@ -4,20 +4,12 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <vector>
-#include "statusbar.h"
+#include "statusbar.hpp"
 using namespace std;
 extern int width;
 extern int height;
-/*extern int time;
-extern int game_round;*/
 
-//int width = 200 * 100;
-//int height = 200 * 100;
 extern GLuint ColorID;
-//extern glm::mat4 model_view;
-//extern glm::mat4 projection;
-extern glm::mat4 MVP;
-extern GLuint MVPID;
 // function for printing text
 // reference : http://programmingexamples.net/wiki/OpenGL/Text 
 void printtext(int x, int y, string String)
@@ -41,27 +33,22 @@ void printtext(int x, int y, string String)
 void writeItemInfo() {
 	printtext(330, 80, "Item List");
 	// when player got an item1
-//	if (player.itemlist[0])
-		printtext(330, 50, "three bullets");
+	printtext(330, 50, "three bullets");
 	// when the player got item2
-	//if (player.itemlist[1])
-		printtext(330, 30, "speed up bullets");
+	printtext(330, 30, "speed up bullets");
 }
 
 void writeRoundInfo() {
-	//string game_round_s = std::to_string(game_round);
 	printtext(20, 80, "Round");
 	printtext(20, 50, "game_round_s");
 }
 
 void writeTimerInfo() {
-	//string time_s = std::to_string(time);
 	printtext(110, 80, "Timer");
 	printtext(110, 50, "time_s");
 }
 
 void writeLifeInfo() {
-	//string life_s = std::to_string(player.life);
 	printtext(200, 80, "Life");
 	printtext(200, 50, "3");//life_s);
 }
@@ -74,8 +61,6 @@ void drawStatusBar()
 	glViewport(0, 0, width, height / 5);
 	projection = glm::ortho(0.0f, 500.0f, 0.0f, 100.0f);
 	model_view = glm::mat4(1.0);
-	MVP = projection * model_view;
-	glUniformMatrix4fv(MVPID, 1, GL_FALSE, &MVP[0][0]);
 	glUniform4f(ColorID, 1.0f, 1.0f, 0.0f, 1.0f);
 
 	glMatrixMode(GL_PROJECTION);
@@ -94,16 +79,13 @@ void drawStatusBar()
 	
 	glUniform4f(ColorID, 0.3f, 0.3f, 0.3f, 1.0f);
 	glColor3f(0.3, 0.3, 0.3);
-	glRectf(0, 0, 500, 100);
-	//drawRect();
-	//font color
 	glUniform4f(ColorID, 0.0f, 0.0f, 0.0f, 0.0f);
 	writeItemInfo();
 	writeLifeInfo();
 	writeTimerInfo();
 	writeRoundInfo();
 }
-
+/*
 void drawRect() {
 	GLuint VertexArrayID;
 	vector<glm::vec3> RectVertices = {
@@ -131,5 +113,4 @@ void drawRect() {
 	glUniform4f(ColorID, 0.3f, 0.3f, 0.3f, 1.0f);
 	MVP = glm::ortho(0.0f, 500.0f, 0.0f, 100.0f)*
 			  glm::lookAt(glm::vec3(600.0f, 0.0f, 0.0f), glm::vec3(0, 0, 0), glm::vec3(0.0f, 1.0f, 0.0f));
-	glUniformMatrix4fv(MVPID, 1, GL_FALSE, &MVP[0][0]);
-}
+}*/
