@@ -3,14 +3,14 @@
 #include <cmath>
 #include <glm/mat4x4.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-
+#include "map.hpp"
 #define PI 3.14159
 extern GLuint ModelID;
 extern GLuint ColorID;
-extern map_item
+extern bool map_item[ArrSize][ArrSize];
 GLuint Item::vertexArrayID;
-static int verticesSize;
-
+int Item::verticesSize;
+vector<Item> Item::vectorItem;
 
 Item::Item(int type, float x, float y)
 {
@@ -46,11 +46,13 @@ void Item::initVAO() {
 
 void Item::draw() {
 	glBindVertexArray(vertexArrayID);
-	glm::mat4 Model = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 1000.0f) *
-		glm::lookAt(glm::vec3(600.0f, 0.0f, 0.0f), glm::vec3(0, 0, 0), glm::vec3(0.0f, 1.0f, 0.0f)) *
+	glm::mat4 Model = glm::translate(glm::mat4(1.0f), glm::vec3(x, y, 0.0f)) *
 		glm::scale(glm::mat4(1.0f), glm::vec3(30.0f));
 	glUniformMatrix4fv(ModelID, 1, GL_FALSE, &Model[0][0]);
-	
+	glUniform4f(ColorID, 0.0f, 0.0f, 1.0f, 1.0f);
+	for (int i = 0; i < verticesSize / 4; i++) {
+		glDrawArrays(GL_LINE_LOOP, i * 4, 4);
+	}
 	glBindVertexArray(0);
 }
 
@@ -62,6 +64,10 @@ bool Item::playerCollision()
 }
 
 void Item::initMap() {
-	
+	map_item[50][51] = 1;
+	vectorItem.push_back(Item(0, 50 * CellSize, 51 * CellSize));
 }
-void Item::drawAll();
+void Item::drawAll() {
+	for (int i = 0; i < vectorItem.size(); i++)
+		vectorItem[i].draw();
+}

@@ -11,6 +11,7 @@
 #include "wall.hpp"
 #include "player.hpp"
 #include "enemy.hpp"
+#include "item.hpp"
 #include "statusbar.hpp"
 #include <cmath>
 #define CellSize 200
@@ -114,6 +115,7 @@ void display() {
 	enemy.draw();
 	Wall::drawAll();
 	Enemy::drawAll();
+	Item::drawAll();
 	drawStatusBar();
 	
 	glutSwapBuffers();
@@ -165,10 +167,11 @@ void init() {
 	Player::initVAO();
 	Enemy::initVAO();
 	Wall::initVAO();
+	Item::initVAO();
 	Player::player = Player(50*200, 50*200);
 	Enemy::initMap();
 	Wall::initMap();
-	
+	Item::initMap();
 	glutSwapBuffers();
 }
 void main(int argc, char **argv) {  	

@@ -3,21 +3,31 @@
 #include <glm/mat4x4.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 //glm::mat4 MVP;
-GLuint MVPID;
-
+extern GLuint ModelID;
 Gun::Gun()
 {
 }
 
 
 void Gun::draw() {
-	glm::mat4 MVP = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 1000.0f) *
-		glm::lookAt(glm::vec3(600.0f, 0.0f, 0.0f), glm::vec3(0, 0, 0), glm::vec3(0.0f, 1.0f, 0.0f)) *
+	glBindVertexArray(VertexArrayID);
+	glm::mat4 Model = 
 		/*scale*/glm::scale(glm::mat4(1.0f), glm::vec3(10.0f));
-	glUniformMatrix4fv(MVPID, 1, GL_FALSE, &MVP[0][0]);
+
+	glUniformMatrix4fv(ModelID, 1, GL_FALSE, &Model[0][0]);
+	for (int i = 0; i < dummy_obj_size / 4; i++) {
+		glDrawArrays(GL_LINE_LOOP, i * 4, 4);
+	}
+	glBindVertexArray(0);
 }
 
 void Gun::initVAO() {
+	vector<glm::vec3> vertices;
+	vector<glm::vec2> uvs;
+	vector<glm::vec3> normals;
+	bool res = loadOBJ("obj_files/gun.obj", vertices, uvs, normals);
+	dummy_obj_size = vertices.size();
+
 	GLuint vertexbuffer;
 	glGenVertexArrays(1, &VertexArrayID);
 	glBindVertexArray(VertexArrayID);
@@ -33,7 +43,4 @@ void Gun::initVAO() {
 		0,                  // stride
 		(void*)0            // array buffer 
 	);
-}
-void Gun::initVertices() {
-	bool res = loadOBJ("obj_files/gun.obj", vertices, uvs, normals);
 }

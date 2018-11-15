@@ -14,8 +14,9 @@ public:
 	float x,y,z;
 	int type;// subclasses
 	static GLuint vertexArrayID;
+	static int verticesSize;
 	static vector<Item> vectorItem;
-	void initVAO();
+	static void initVAO();
 	static void initMap();
 	static void drawAll();
 };
