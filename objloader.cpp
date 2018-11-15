@@ -205,6 +205,7 @@ bool loadOBJ3(
 		getchar();
 		return false;
 	}
+	int num = 0;
 	while (1) {
 		char lineHeader[128];
 		// read the first word of the line
@@ -225,14 +226,17 @@ bool loadOBJ3(
 			temp_uvs.push_back(uv);
 		}
 		else if (strcmp(lineHeader, "f") == 0) {
+			num++;
 			std::string vertex1, vertex2, vertex3;
 			unsigned int vertexIndex[4], uvIndex[4];
 			int matches = fscanf(file, "%d/%d %d/%d %d/%d %d/%d\n", &vertexIndex[0], &uvIndex[0], &vertexIndex[1], &uvIndex[1], &vertexIndex[2], &uvIndex[2], &vertexIndex[3], &uvIndex[3]);
+			
 			if (matches == 6) {
 				vertexIndex[3] = vertexIndex[2];
 				uvIndex[3] = uvIndex[2];
 			}
 			if (matches != 6 && matches != 8) {
+				printf("num : %d, matches : %d",num, matches);
 				printf("File can't be read by our simple parser :-( Try exporting with other options\n");
 				fclose(file);
 				return false;

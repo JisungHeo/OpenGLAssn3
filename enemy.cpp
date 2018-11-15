@@ -1,11 +1,15 @@
 #include "enemy.hpp"
 #include <glm/ext/matrix_transform.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/mat4x4.hpp>
 #include "player.hpp"
 #include "objloader.hpp"
 #define PI 3.141592f
-using namespace std;
+///using namespace std;
 extern GLuint ModelID;
 extern GLuint ColorID;
+extern glm::mat4 MVP;
+extern GLuint MVPID;
 Enemy::Enemy(float x, float y) {
 	this->x = x;
 	this->y = y;
@@ -26,7 +30,36 @@ void Enemy::draw() {
 	}
 	glBindVertexArray(0);
 }
+
+void Enemy::draw2() {
+	initVertices();
+	GLuint vertexbuffer;
+	glGenVertexArrays(1, &VertexArrayID);
+	glBindVertexArray(VertexArrayID);
+	glGenBuffers(1, &vertexbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &vertices[0], GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(
+		0,                  // attribute
+		3,                  // size
+		GL_FLOAT,           // type
+		GL_FALSE,           // normalized?
+		0,                  // stride
+		(void*)0            // array buffer 
+	);
+
+	MVP = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 1000.0f) *
+		glm::lookAt(glm::vec3(600.0f, 0.0f, 0.0f), glm::vec3(0, 0, 0), glm::vec3(0.0f, 1.0f, 0.0f));
+		/*scale     */	//glm::scale(glm::mat4(1.0f), glm::vec3(30.0f));
+	//glUniformMatrix4fv(MVPID, 1, GL_FALSE, &MVP[0][0]);
+}
+
 void Enemy::initVAO() {
 	Enemy::vertexArrayID = Player::vertexArrayID;
 	Enemy::dummy_obj_size = Player::dummy_obj_size;
+}
+
+void Enemy::initVertices() {
+	bool res = loadOBJ3("obj_files/Skeleton.obj", vertices, uvs);
 }

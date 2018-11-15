@@ -2,7 +2,7 @@
 #include "objloader.hpp"
 #include <glm/mat4x4.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-glm::mat4 MVP;
+//glm::mat4 MVP;
 GLuint MVPID;
 
 Gun::Gun()
@@ -11,7 +11,7 @@ Gun::Gun()
 
 
 void Gun::draw() {
-	MVP = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 1000.0f) *
+	glm::mat4 MVP = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 1000.0f) *
 		glm::lookAt(glm::vec3(600.0f, 0.0f, 0.0f), glm::vec3(0, 0, 0), glm::vec3(0.0f, 1.0f, 0.0f)) *
 		/*scale*/glm::scale(glm::mat4(1.0f), glm::vec3(10.0f));
 	glUniformMatrix4fv(MVPID, 1, GL_FALSE, &MVP[0][0]);

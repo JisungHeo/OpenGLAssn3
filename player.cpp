@@ -1,13 +1,15 @@
 #include "player.hpp"
 #include <glm/ext/matrix_transform.hpp>
 #include "objloader.hpp"
+#define CellSize 200
 #define PI 3.141592f
 using namespace std;
 extern GLuint ModelID;
+Player Player::player(0.0f,0.0f);
 Player::Player(float x, float y) {
 	this->x = x;
 	this->y = y;
-	printf("playervertex: %d", Player::vertexArrayID);
+	this->direction = 90.0f;
 }
 
 GLuint Player::vertexArrayID;
@@ -15,6 +17,8 @@ int Player::dummy_obj_size;
 void Player::draw() {
 	glBindVertexArray(vertexArrayID);
 	glm::mat4 Model = glm::translate(glm::mat4(1.0f), glm::vec3(x, y, 0)) *
+		glm::rotate(glm::mat4(1.0f), PI / 180.0f * Player::player.direction, glm::vec3(0,0,1)) *
+		glm::rotate(glm::mat4(1.0f), PI / 180 * 90.0f, glm::vec3(0, 0, 1)) *
 		glm::rotate(glm::mat4(1.0f), PI / 180 * 90.0f, glm::vec3(1, 0, 0));
 	glUniformMatrix4fv(ModelID, 1, GL_FALSE, &Model[0][0]);
 	for (int i = 0; i < dummy_obj_size / 4; i++) {
@@ -46,4 +50,21 @@ void Player::initVAO() {
 		(void*)0            // array buffer 
 	);
 	dummy_obj_size = vertices.size();
+}
+
+void Player::foward() {
+	if (Player::player.direction == 0.0f)
+		Player::player.x += CellSize;
+	else if (Player::player.direction == 90.0f)
+		Player::player.y += CellSize;
+	else if (Player::player.direction == 180.0f)
+		Player::player.x -= CellSize;
+	else if (Player::player.direction == 270.0f)
+		Player::player.y -= CellSize;
+}
+
+void Player::rotate(float angle) {
+	Player::player.direction = fmod(Player::player.direction + angle, 360.0f);
+	if (Player::player.direction < 0)
+		Player::player.direction += 360.0f;
 }

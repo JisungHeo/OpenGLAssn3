@@ -1,5 +1,7 @@
 #ifndef OBJLOADER_H
 #define OBJLOADER_H
+#include <vector>
+#include <glm/glm.hpp>
 
 bool loadOBJ(
 	const char * path, 
