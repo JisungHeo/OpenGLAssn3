@@ -1,11 +1,13 @@
 #include "enemy.hpp"
 #include <glm/ext/matrix_transform.hpp>
 #include "player.hpp"
-#include "objloader.hpp"
+#define CellSize 200
+#define ArrSize 100
 #define PI 3.141592f
-using namespace std;
+extern bool map_enemy[ArrSize][ArrSize];
 extern GLuint ModelID;
 extern GLuint ColorID;
+vector<Enemy> Enemy::vectorEnemy;
 Enemy::Enemy(float x, float y) {
 	this->x = x;
 	this->y = y;
@@ -29,4 +31,23 @@ void Enemy::draw() {
 void Enemy::initVAO() {
 	Enemy::vertexArrayID = Player::vertexArrayID;
 	Enemy::dummy_obj_size = Player::dummy_obj_size;
+}
+
+void Enemy::initMap() {
+	for(int i=0;i<4;i++)
+		for (int j = 0; j < 4; j++) {
+			map_enemy[i*25+5][j*25+5] = 1;
+			map_enemy[i * 25 + 5][j * 25 + 19] = 1;
+			map_enemy[i * 25 + 19][j * 25 + 5] = 1;
+			map_enemy[i * 25 + 19][j * 25 + 19] = 1;
+			map_enemy[i * 25 + 12][j * 25 + 12] = 1;
+		}
+	for (int i = 0; i < ArrSize; i++)
+		for (int j = 0; j < ArrSize; j++)
+			if(map_enemy[i][j])
+				Enemy::vectorEnemy.push_back(Enemy(i*CellSize, j*CellSize));
+}
+void Enemy::drawAll() {
+	for (int i = 0; i < vectorEnemy.size(); i++)
+		vectorEnemy[i].draw();
 }
