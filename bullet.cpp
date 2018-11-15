@@ -1,21 +1,15 @@
+#pragma once
 #include "Bullet.h"
 #include <cmath>
 #include <iostream>
 #include <glm/mat4x4.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include <vector>
-#include <glm/glm.hpp>
-#include "objloader.hpp"
+/*#include "objloader.hpp"
 #include "shader.hpp"
-#include "shader.hpp"
-#include <glm/glm.hpp>
-#include <stack>
-#include <glm/gtc/matrix_transform.hpp>
-#include <cmath>
-
+using namespace std;
 glm::mat4 MVP;
 GLuint MVPID;
-using namespace std;
+
 Bullet::Bullet(int direction, float x, float y,float z)
 {
 	this->x = x;
@@ -34,10 +28,10 @@ void Bullet::draw() {
 	y_diff = 0; //move() function will be called outside **thinking point
 	MVP =			glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 1000.0f) *
 						glm::lookAt(glm::vec3(600.0f, 0.0f, 0.0f), glm::vec3(0, 0, 0), glm::vec3(0.0f, 1.0f, 0.0f)) *
-	/*scale     */	glm::scale(glm::mat4(1.0f), glm::vec3(30.0f))*
-	/*rotation */	glm::rotate(glm::mat4(1.0f), rotateAngle, glm::vec3(0.0f, 0.0f, 1.0f))*
-	/*translate*/ glm::translate(glm::mat4(1.0), glm::vec3(x_diff, y_diff, 0));
-	glUniformMatrix4fv(MVPID, 1, GL_FALSE, &MVP[0][0]);
+	/*scale     */	//glm::scale(glm::mat4(1.0f), glm::vec3(30.0f))*
+	/*rotation *///	glm::rotate(glm::mat4(1.0f), rotateAngle, glm::vec3(0.0f, 0.0f, 1.0f))*
+	/*translate*/// glm::translate(glm::mat4(1.0), glm::vec3(x_diff, y_diff, 0));
+	/*glUniformMatrix4fv(MVPID, 1, GL_FALSE, &MVP[0][0]);
 }
 
 void Bullet::initVertices() {
@@ -79,9 +73,9 @@ glm::mat4 Bullet::rotation() {
 	default: //RIGHT
 		break;
 	}
-}
-*/
+}*/
 
+/*
 void Bullet::rotation() {
 	switch (this->direction)
 	{
@@ -129,4 +123,4 @@ bool Bullet::wallCollision() {
 	//}
 	return false;
 }
-
+*/

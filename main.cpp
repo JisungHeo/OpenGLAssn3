@@ -3,8 +3,8 @@
 #include <glm/mat4x4.hpp>
 #include <GL/glew.h> 
 #include <GL/freeglut.h> 
-#include "objloader.hpp"
 #include <glm/gtc/matrix_transform.hpp>
+#include "objloader.hpp"
 #include "shader.hpp"
 
 GLuint programID;
@@ -21,8 +21,13 @@ void display() {
 	glUseProgram(programID);
 	glBindVertexArray(VertexArrayID);
 	MVP = glm::perspective(glm::radians(45.0f), 4.0f / 3, 0.1f, 1000.0f) *
-		glm::lookAt(glm::vec3(0.0f, 100.0f, 600.0f), glm::vec3(3.19805, 100.331, 0), glm::vec3(0.0f, 1.0f, 0.0f)) *
-		glm::mat4(1.0f);
+		glm::lookAt(glm::vec3(400.0f, 0.0f, -40.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f)) *
+		glm::mat4(1.0f) * glm::scale(glm::mat4(1.0f), glm::vec3(30.0f)); 
+
+	/*MVP = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 1000.0f) *
+		glm::lookAt(glm::vec3(600.0f, 0.0f, 0.0f), glm::vec3(0, 0, 0), glm::vec3(0.0f, 1.0f, 0.0f)) *
+		glm::scale(glm::mat4(1.0f), glm::vec3(30.0f));*/
+	
 	glUniformMatrix4fv(MVPID, 1, GL_FALSE, &MVP[0][0]);
 	glUniform4f(ColorID, 0.0f, 1.0f, 0.0f, 1.0f);
 	for (int i = 0; i < dummy_obj_size/4; i++) {
@@ -38,29 +43,23 @@ void reshape(int w, int h) {
 }
 
 void init() {
+	//shader
 	programID = LoadShaders("myVS.glsl", "myFS.glsl");
-	
 	MVPID = glGetUniformLocation(programID, "MVP");
 	ColorID = glGetUniformLocation(programID, "fragmentColor");
 	vector<glm::vec3> vertices;
 	vector<glm::vec2> uvs;
 	vector<glm::vec3> normals; // Won't be used at the moment.
-	bool res = loadOBJ("obj_files/dummy_obj.obj", vertices, uvs, normals);
+	bool res = loadOBJ("obj_files/gun.obj", vertices, uvs, normals);
 	glUseProgram(programID);
-	
-	
 
+	//vertexBuffer
 	glGenVertexArrays(1, &VertexArrayID);
 	glBindVertexArray(VertexArrayID);
-
-	
 	glGenBuffers(1, &vertexbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
 	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &vertices[0], GL_STATIC_DRAW);
-	glUseProgram(programID);
-
 	glEnableVertexAttribArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
 	glVertexAttribPointer(
 		0,                  // attribute
 		3,                  // size
