@@ -1,15 +1,17 @@
-#include <iostream> 
+#pragma once
+//#include <iostream> 
 #include <vector>
 #include <glm/mat4x4.hpp>
 #include <GL/glew.h> 
-#include <GL/freeglut.h> 
+//#include <glm/glm.hpp>
+//#include <GL/freeglut.h> 
 #include <glm/gtc/matrix_transform.hpp>
 #include "objloader.hpp"
 #include "shader.hpp"
 #include "wall.hpp"
 #include "player.hpp"
 #include "enemy.hpp"
-
+using namespace std;
 GLuint programID;
 GLuint ProjectionID;
 GLuint ViewID;
@@ -21,7 +23,7 @@ GLuint vertexbuffer;
 unsigned int dummy_obj_size;
 
 //Player player(0.0f,0.0f);
-using namespace std; 
+
 void display() {
 	
 	glClear(GL_COLOR_BUFFER_BIT);
