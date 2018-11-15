@@ -8,6 +8,16 @@ bool loadOBJ(
 	std::vector<glm::vec3> & out_normals
 );
 
+bool loadOBJ2(
+	const char * path,
+	std::vector<glm::vec3> & out_vertices
+);
+
+bool loadOBJ3(
+	const char * path,
+	std::vector<glm::vec3> & out_vertices,
+	std::vector<glm::vec2> & out_uvs
+);
 
 
 bool loadAssImp(

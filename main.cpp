@@ -3,8 +3,8 @@
 #include <glm/mat4x4.hpp>
 #include <GL/glew.h> 
 #include <GL/freeglut.h> 
-#include "objloader.hpp"
 #include <glm/gtc/matrix_transform.hpp>
+#include "objloader.hpp"
 #include "shader.hpp"
 #include "wall.hpp"
 #include "player.hpp"
@@ -63,6 +63,7 @@ void timer(int time) {
 }
 
 void init() {
+	//shader
 	programID = LoadShaders("myVS.glsl", "myFS.glsl");
 	
 	ProjectionID = glGetUniformLocation(programID, "Projection");
