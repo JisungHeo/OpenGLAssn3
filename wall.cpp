@@ -1,7 +1,9 @@
 #include "wall.hpp"
 #include <glm/ext/matrix_transform.hpp>
+#include "map.hpp"
 extern GLuint ModelID;
 extern GLuint ColorID;
+vector<Wall> Wall::vectorWall;
 Wall::Wall(float x, float y) {
 	this->x = x;
 	this->y = y;
@@ -47,5 +49,17 @@ void Wall::initVAO() {
 	glBufferData(GL_ARRAY_BUFFER, 24 * sizeof(glm::vec3), &out_vertices[0], GL_STATIC_DRAW);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-	
+}
+
+void Wall::initMap() {
+	for (int i = 0; i < ArrSize; i++) {
+		map_wall[i][0] = map_wall[0][i] = 1;
+		Wall::vectorWall.push_back(Wall(i*CellSize, 0*CellSize));
+		Wall::vectorWall.push_back(Wall(0*CellSize, i*CellSize));
+	}
+}
+
+void Wall::drawAll() {
+	for (int i = 0; i < vectorWall.size(); i++)
+		vectorWall[i].draw();
 }

@@ -9,7 +9,6 @@
 #include "wall.hpp"
 #include "player.hpp"
 #include "enemy.hpp"
-
 GLuint programID;
 GLuint ProjectionID;
 GLuint ViewID;
@@ -20,14 +19,15 @@ glm::mat4 MVP;
 GLuint vertexbuffer;
 unsigned int dummy_obj_size;
 
+
 //Player player(0.0f,0.0f);
 using namespace std; 
 void display() {
 	
 	glClear(GL_COLOR_BUFFER_BIT);
 	glUseProgram(programID);
-	glm::mat4 Projection = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 1000.0f);
-	glm::mat4 View = glm::lookAt(glm::vec3(0.0f, 0.0f, 800.0f), glm::vec3(0, 0, 0), glm::vec3(0.0f, 1.0f, 0.0f));
+	glm::mat4 Projection = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 10000.0f);
+	glm::mat4 View = glm::lookAt(glm::vec3(0.0f, 0.0f, 10000.0f), glm::vec3(0, 0, 0), glm::vec3(0.0f, 1.0f, 0.0f));
 	glUniformMatrix4fv(ProjectionID, 1, GL_FALSE, &Projection[0][0]);
 	glUniformMatrix4fv(ViewID, 1, GL_FALSE, &View[0][0]);
 	glUniform4f(ColorID, 0.0f, 1.0f, 0.0f, 1.0f);
@@ -35,8 +35,7 @@ void display() {
 	player.draw();
 	Enemy enemy(200.0f,0.0f);
 	enemy.draw();
-	Wall wall(0, 0);
-	wall.draw();
+	Wall::drawAll();
 	
 	glutSwapBuffers();
 }
@@ -74,6 +73,7 @@ void init() {
 	Player::initVAO();
 	Enemy::initVAO();
 	Wall::initVAO();
+	Wall::initMap();
 	glutSwapBuffers();
 }
 void main(int argc, char **argv) {  	
