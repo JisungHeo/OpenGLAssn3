@@ -1,5 +1,5 @@
 #pragma once
-#include "Bullet.h"
+#include "bullet.hpp"
 #include <cmath>
 #include <iostream>
 #include <glm/mat4x4.hpp>
@@ -11,12 +11,13 @@ using namespace std;
 extern bool map_bullet[ArrSize][ArrSize];
 extern bool map_wall[ArrSize][ArrSize];
 extern GLuint ModelID;
+GLuint Bullet::VertexArrayID;
+int Bullet::dummy_obj_size;
 
-Bullet::Bullet(int direction, float x, float y,float z)
+Bullet::Bullet(int direction, float x, float y)
 {
 	this->x = x;
 	this->y = y;
-	this->z = z;
 	this->direction = direction;
 }
 
@@ -27,10 +28,10 @@ Bullet::~Bullet()
 void Bullet::draw() {
 	rotation();
 	glBindVertexArray(VertexArrayID);
-	glm::mat4 Model = 
+	glm::mat4 Model = glm::translate(glm::mat4(1.0), glm::vec3(x, y, 0))*
 		/*scale     */	glm::scale(glm::mat4(1.0f), glm::vec3(30.0f))*
-		/*rotation */  glm::rotate(glm::mat4(1.0f), rotateAngle, glm::vec3(0.0f, 0.0f, 1.0f))*
-		/*translate*/  glm::translate(glm::mat4(1.0), glm::vec3(x, y, 0));
+		/*rotation */  glm::rotate(glm::mat4(1.0f), rotateAngle, glm::vec3(0.0f, 0.0f, 1.0f));
+		/*translate*/  
 
 	glUniformMatrix4fv(ModelID, 1, GL_FALSE, &Model[0][0]);
 	for (int i = 0; i < dummy_obj_size / 4; i++) {
@@ -50,7 +51,7 @@ void Bullet::initVAO() {
 	glBindVertexArray(VertexArrayID);
 	glGenBuffers(1, &vertexbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-	glBufferData(GL_ARRAY_BUFFER, NUM_FACES * sizeof(glm::vec3), &vertices[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, dummy_obj_size * sizeof(glm::vec3), &vertices[0], GL_STATIC_DRAW);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(
 		0,                  // attribute

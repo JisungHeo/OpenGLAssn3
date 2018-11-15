@@ -1,10 +1,13 @@
-#include "gun.h"
+#include "gun.hpp"
 #include "objloader.hpp"
 #include <glm/mat4x4.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 //glm::mat4 MVP;
 extern GLuint ModelID;
-Gun::Gun(int x, int y)
+GLuint Gun::VertexArrayID;
+int Gun::dummy_obj_size;
+
+Gun::Gun(float x, float y)
 {
 	this->x = x;
 	this->y = y;
@@ -27,7 +30,7 @@ void Gun::initVAO() {
 	vector<glm::vec3> vertices;
 	vector<glm::vec2> uvs;
 	vector<glm::vec3> normals;
-	bool res = loadOBJ("obj_files/gun.obj", vertices, uvs, normals);
+	bool res = loadOBJ("obj_files/M1911.obj", vertices, uvs, normals);
 	dummy_obj_size = vertices.size();
 
 	GLuint vertexbuffer;

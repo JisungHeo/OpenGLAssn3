@@ -12,6 +12,8 @@
 #include "player.hpp"
 #include "enemy.hpp"
 #include "item.hpp"
+#include "gun.hpp"
+#include "bullet.hpp"
 #include "statusbar.hpp"
 #include <cmath>
 #define CellSize 200
@@ -116,6 +118,10 @@ void display() {
 	Wall::drawAll();
 	Enemy::drawAll();
 	Item::drawAll();
+	Gun gun(50*CellSize, 49*CellSize);
+	gun.draw();
+	Bullet bullet(0, 50 * CellSize, 48 * CellSize);
+	bullet.draw();
 	drawStatusBar();
 	
 	glutSwapBuffers();
@@ -168,6 +174,8 @@ void init() {
 	Enemy::initVAO();
 	Wall::initVAO();
 	Item::initVAO();
+	Gun::initVAO();
+	Bullet::initVAO();
 	Player::player = Player(50*200, 50*200);
 	Enemy::initMap();
 	Wall::initMap();

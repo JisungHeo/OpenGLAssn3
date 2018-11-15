@@ -9,11 +9,12 @@ using namespace std;
 class Gun
 {
 public:
-	Gun(int,int);
+	Gun(float,float);
 	void draw();
-	void initVAO();
-	GLuint VertexArrayID;
-	int dummy_obj_size;
-	int x, y;
+	static void initVAO();
+	static GLuint VertexArrayID;
+	static int dummy_obj_size;
+	float x, y;
+
 };
 
