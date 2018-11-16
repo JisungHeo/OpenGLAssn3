@@ -58,14 +58,22 @@ void Player::initVAO() {
 
 
 void Player::foward() {
-	if (Player::player.direction == 0.0f)
-		Player::player.x += CellSize;
-	else if (Player::player.direction == 90.0f)
-		Player::player.y += CellSize;
-	else if (Player::player.direction == 180.0f)
-		Player::player.x -= CellSize;
-	else if (Player::player.direction == 270.0f)
-		Player::player.y -= CellSize;
+	float prev_x = x;
+	float prev_y = y;
+	if (direction == 0.0f)
+		prev_x+= CellSize;
+	else if (direction == 90.0f)
+		prev_y += CellSize;
+	else if (direction == 180.0f)
+		prev_x -= CellSize;
+	else if (direction == 270.0f)
+		prev_y -= CellSize;
+	if (!wallCollision(prev_x/200, prev_y/200))
+	{
+		printf("wall is not here");
+		this->x = prev_x;
+		this->y = prev_y;
+	}
 }
 
 void Player::rotate(float angle) {
@@ -75,11 +83,12 @@ void Player::rotate(float angle) {
 }
 
 bool Player::collision(bool map[ArrSize][ArrSize], int x, int y) {
-	bool upCollision = map[x / 50][(y + 25) / 50] == 1;
+	return map[x][y] == 1;
+	/*bool upCollision = map[x / 50][(y + 25) / 50] == 1;
 	bool downCollision = map[x / 50][(y - 25) / 50] == 1;
 	bool leftCollision = map[(x - 25) / 50][y / 50] == 1;
 	bool rightCollision = map[(x + 25) / 50][y / 50] == 1;
-	return upCollision || downCollision || leftCollision || rightCollision;
+	return upCollision || downCollision || leftCollision || rightCollision;*/
 }
 bool Player::wallCollision(int x, int y)
 {
