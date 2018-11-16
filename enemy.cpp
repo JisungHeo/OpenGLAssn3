@@ -97,10 +97,10 @@ void Enemy::initMap() {
 	for(int i=0;i<4;i++)
 		for (int j = 0; j < 4; j++) {
 			map_enemy[i*25+5][j*25+5] = 1;
-			map_enemy[i * 25 + 5][j * 25 + 19] = 1;
-			map_enemy[i * 25 + 19][j * 25 + 5] = 1;
+			//map_enemy[i * 25 + 5][j * 25 + 19] = 1;
+			//map_enemy[i * 25 + 19][j * 25 + 5] = 1;
 			map_enemy[i * 25 + 19][j * 25 + 19] = 1;
-			map_enemy[i * 25 + 12][j * 25 + 12] = 1;
+			//map_enemy[i * 25 + 12][j * 25 + 12] = 1;
 		}
 	for (int i = 0; i < ArrSize; i++)
 		for (int j = 0; j < ArrSize; j++)
