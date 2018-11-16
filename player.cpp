@@ -68,17 +68,18 @@ void Player::initVAO() {
 	vertexArrayID = vertexArrayIDs[0];
 }
 
+
 void forward_step(int value) {
 	if (Player::player.direction == 0.0f)
-		Player::player.x += CellSize/8;
+		Player::player.x += CellSize / 8;
 	else if (Player::player.direction == 90.0f)
-		Player::player.y += CellSize/8;
+		Player::player.y += CellSize / 8;
 	else if (Player::player.direction == 180.0f)
-		Player::player.x -= CellSize/8;
+		Player::player.x -= CellSize / 8;
 	else if (Player::player.direction == 270.0f)
-		Player::player.y -= CellSize/8;
-	Player::vertexArrayID = Player::vertexArrayIDs[NUM_FRAME-value];
-	
+		Player::player.y -= CellSize / 8;
+	Player::vertexArrayID = Player::vertexArrayIDs[NUM_FRAME - value];
+
 	if (value > 0)
 		glutTimerFunc(50, forward_step, value - 1);
 	else {
@@ -89,9 +90,23 @@ void forward_step(int value) {
 }
 
 void Player::forward() {
-	if (doing == false) {
-		glutTimerFunc(0, forward_step, NUM_FRAME-1);
-		doing = true;
+	float prev_x = x;
+	float prev_y = y;
+	if (direction == 0.0f)
+		prev_x+= CellSize;
+	else if (direction == 90.0f)
+		prev_y += CellSize;
+	else if (direction == 180.0f)
+		prev_x -= CellSize;
+	else if (direction == 270.0f)
+		prev_y -= CellSize;
+	if (!wallCollision(prev_x/200, prev_y/200))
+	{
+		printf("wall is not here");
+		if (doing == false) {
+			glutTimerFunc(0, forward_step, NUM_FRAME - 1);
+			doing = true;
+		}
 	}
 }
 
@@ -120,11 +135,12 @@ void Player::rotate(float angle) {
 }
 
 bool Player::collision(bool map[ArrSize][ArrSize], int x, int y) {
-	bool upCollision = map[x / 50][(y + 25) / 50] == 1;
+	return map[x][y] == 1;
+	/*bool upCollision = map[x / 50][(y + 25) / 50] == 1;
 	bool downCollision = map[x / 50][(y - 25) / 50] == 1;
 	bool leftCollision = map[(x - 25) / 50][y / 50] == 1;
 	bool rightCollision = map[(x + 25) / 50][y / 50] == 1;
-	return upCollision || downCollision || leftCollision || rightCollision;
+	return upCollision || downCollision || leftCollision || rightCollision;*/
 }
 bool Player::wallCollision(int x, int y)
 {

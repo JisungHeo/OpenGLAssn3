@@ -135,7 +135,7 @@ void init() {
 	Item::initVAO();
 	Gun::initVAO();
 	Bullet::initVAO();
-	Player::player = Player(50*200, 50*200);
+	Player::player = Player(50*200 + 100, 50*200 + 100);
 	Enemy::initMap();
 	Wall::initMap();
 	Item::initMap();
