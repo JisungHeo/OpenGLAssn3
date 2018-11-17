@@ -104,3 +104,24 @@ bool Player::itemCollision(int x, int y)
 {
 	return collision(map_item, x, y);
 }
+
+void Player::bulletLoad() {
+	float bul_x = x;
+	float bul_y = y;
+	//if (player.itemlist[0]) {
+	/*	if (direction == 0.0f) {
+			vectorBullet.push_back(Bullet(bul_x - 1, bul_y, direction));
+		}
+		else if (direction == 90.0f) {
+			listBullet.push_back(Bullet(bul_x + 1, bul_y, direction));
+		}
+			listBullet.push_back(Bullet(dir, bul_x, bul_y - 1));
+			listBullet.push_back(Bullet(dir, bul_x, bul_y + 1));
+			break;
+		}
+	//}
+	// item2: speed up bullets.
+	if (player.itemlist[1])
+		bullet_speed = 2;*/
+	Bullet:: vectorBullet.push_back(Bullet(direction, bul_x, bul_y));
+}

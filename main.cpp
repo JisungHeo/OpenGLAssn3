@@ -4,7 +4,7 @@
 #include <glm/mat4x4.hpp>
 #include <GL/glew.h> 
 //#include <glm/glm.hpp>
-//#include <GL/freeglut.h> 
+#include <GL/freeglut.h> 
 #include <glm/gtc/matrix_transform.hpp>
 #include "objloader.hpp"
 #include "shader.hpp"
@@ -31,8 +31,7 @@ GLuint vertexbuffer;
 unsigned int dummy_obj_size;
 bool third_person_view = false;
 
-//Player player(0.0f,0.0f);
-
+//static Player player; //= Player(50 * 200 + 100, 50 * 200 + 100);
 glm::mat4 cameraMove() {
 	float dx=0.0f;//offset for the point looked at
 	float dy=0.0f;
@@ -102,6 +101,21 @@ glm::mat4 cameraMove() {
 		glm::vec3(Player::player.x+dx, Player::player.y+dy, 169.0f),
 		glm::vec3(0.0f, 0.0f, 1.0f));
 }
+
+void drawEntity() {
+	Player::player.draw();
+	//Enemy enemy(200.0f, 0.0f);
+	//enemy.draw();
+	Wall::drawAll();
+	Enemy::drawAll();
+	Item::drawAll();
+	Gun gun(50 * CellSize, 49 * CellSize);
+	gun.draw();
+	Bullet bullet(0, 50 * CellSize, 48 * CellSize);
+	Bullet::drawAll();
+	drawStatusBar();
+}
+
 void display() {
 	glViewport(0, 0.2*height, width, 0.8*height);
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -112,17 +126,7 @@ void display() {
 	glUniformMatrix4fv(ViewID, 1, GL_FALSE, &View[0][0]);
 	
 	glUniform4f(ColorID, 0.0f, 1.0f, 0.0f, 1.0f);
-	Player::player.draw();
-	Enemy enemy(200.0f,0.0f);
-	enemy.draw();
-	Wall::drawAll();
-	Enemy::drawAll();
-	Item::drawAll();
-	Gun gun(50*CellSize, 49*CellSize);
-	gun.draw();
-	Bullet bullet(0, 50 * CellSize, 48 * CellSize);
-	bullet.draw();
-	drawStatusBar();
+	drawEntity();
 	
 	glutSwapBuffers();
 }
@@ -152,13 +156,29 @@ void keyboard(unsigned char key, int x, int y) {
 	case 'q':
 		third_person_view = !third_person_view;
 		break;
+	case ' ':
+		Player::player.bulletLoad();
+		printf("bulletload");
 	}
 	printf("%f\n", Player::player.direction);
 	glutPostRedisplay();
 }
 
 void timer(int time) {
+	//if (!game_over) {
+	//bulletUpdate();
+	//itemUpdate();
+	if (time % 100 == 0) {
+	Enemy::update();
+	Bullet::update();
+	}
+
+	
+	//timeUpdate();
+	//checkGameOver();
 	time++;
+	//printf("time : %d\n",time);
+	glutTimerFunc(1, timer, time);
 }
 
 void init() {
@@ -191,7 +211,8 @@ void main(int argc, char **argv) {
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
 	glutKeyboardFunc(keyboard);
-	glutTimerFunc(0, timer, 0);
+	//glutTimerFunc(0, timer, 0);
+	glutTimerFunc(10, timer, 1);
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f); 
 	glewInit();
 	init();

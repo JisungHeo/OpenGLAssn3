@@ -3,6 +3,7 @@
 #include <GL/glew.h>
 #include <GL/freeglut.h>
 #include <vector>
+#include "bullet.hpp"
 #define ArrSize 100
 class Player {
 public:
@@ -15,8 +16,10 @@ public:
 	static void initVAO();
 	static Player player;
 	static int dummy_obj_size;
+	//vector<Bullet> vectorBullet;
 	void foward();
 	void rotate(float angle);
+	void bulletLoad();
 	bool collision(bool map[ArrSize][ArrSize], int x, int y);
 	bool wallCollision(int x, int y);
 	bool enemyCollision();

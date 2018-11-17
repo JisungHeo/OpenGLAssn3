@@ -7,14 +7,17 @@
 #include "objloader.hpp"
 #include "shader.hpp"
 #include "map.hpp"
+#include "player.hpp"
+#define PI 3.141592f
 using namespace std;
 extern bool map_bullet[ArrSize][ArrSize];
 extern bool map_wall[ArrSize][ArrSize];
 extern GLuint ModelID;
 GLuint Bullet::VertexArrayID;
 int Bullet::dummy_obj_size;
+vector<Bullet> Bullet::vectorBullet;
 
-Bullet::Bullet(int direction, float x, float y)
+Bullet::Bullet(float direction, float x, float y)
 {
 	this->x = x;
 	this->y = y;
@@ -26,12 +29,12 @@ Bullet::~Bullet()
 }
 
 void Bullet::draw() {
-	rotation();
+	//rotation();
 	glBindVertexArray(VertexArrayID);
 	glm::mat4 Model = glm::translate(glm::mat4(1.0), glm::vec3(x, y, 0))*
-		/*scale     */	glm::scale(glm::mat4(1.0f), glm::vec3(30.0f))*
-		/*rotation */  glm::rotate(glm::mat4(1.0f), rotateAngle, glm::vec3(0.0f, 0.0f, 1.0f));
-		/*translate*/  
+		/*scale     */	glm::scale(glm::mat4(1.0f), glm::vec3(10.0f))*
+		/*rotation */  glm::rotate(glm::mat4(1.0f), PI/180*direction, glm::vec3(0.0f, 0.0f, 1.0f)) *
+		/*translate*/  glm::rotate(glm::mat4(1.0f), PI / 180 * 90.0f, glm::vec3(0.0f,1.0f, 0.0f));
 
 	glUniformMatrix4fv(ModelID, 1, GL_FALSE, &Model[0][0]);
 	for (int i = 0; i < dummy_obj_size / 4; i++) {
@@ -81,7 +84,7 @@ glm::mat4 Bullet::rotation() {
 	}
 }*/
 
-
+/*
 void Bullet::rotation() {
 	switch (this->direction)
 	{
@@ -97,30 +100,44 @@ void Bullet::rotation() {
 	default: //RIGHT
 		rotateAngle = -90.0f;
 	}
-}
+	float dir = direction;
+	if (dir == 0.0f) {//up
+		ro
+	}
+	else if (dir == 90.f) {//down
+		this->y = this->y + 10.0f;
+	}
+	else if (dir == 180.0f) {//left
+		this->x = this->x - 10.0f;
+	}
+	else if (dir == 270.0f) {//right
+		this->y = this->y - 10.0f;
+	}
+}*/
 
 void Bullet::move() {
 	//0: up, 1:down, 2:left, 3:right
-	int dir = this->direction;
-	int prev_x_fit = this->x / 200;
-	int prev_y_fit = this->y / 200;
+	float dir = this->direction;
+	int prev_x_fit =int(this->x / 200);
+	int prev_y_fit = int(this->y / 200);
 	int x_fit, y_fit;
 
-	if (dir == 0) {//up
-		this->y = this->y + 1;
+	if (dir == 0.0f) {//up
+		this->x = this->x + 10.0f;
 	}
-	else if (dir == 1) {//down
-		this->y = this->y - 1;
+	else if (dir == 90.f) {//down
+		this->y = this->y + 10.0f;
 	}
-	else if (dir == 2) {//left
-		this->x = this->x - 1;
+	else if (dir == 180.0f) {//left
+		this->x = this->x- 10.0f;
 	}
-	else {//right
-		this->x = this->x + 1;
+	else if (dir == 270.0f){//right
+		this->y = this->y - 10.0f;
 	}
 
-	x_fit = this->x / 200;
-	y_fit = this->y / 200;
+	x_fit = int(this->x / 200);
+	y_fit = int(this->y / 200);
+
 	if ((x_fit != prev_x_fit )|| (y_fit!=prev_y_fit)) { //if there was any position change in block unit
 		map_bullet[prev_x_fit][prev_y_fit] = 0;
 		map_bullet[x_fit][y_fit] = 1;
@@ -136,4 +153,53 @@ bool Bullet::wallCollision() {
 		return true;
 	}
 	return false;
+}
+
+void Bullet::update() {
+	//int size = vectorBullet.size();
+	for (int i = 0; i <vectorBullet.size(); i++) {
+		vectorBullet[i].move();
+		if (vectorBullet[i].wallCollision()) {
+			vectorBullet[i].~Bullet();
+			vectorBullet.erase(vectorBullet.begin() + i);
+			//vectorBullet[i].~Bullet();
+		}
+	}
+	/*vector <Bullet>* tmp_vector = &(Player::player.vectorBullet);
+	for (vector <Bullet>::iterator it = tmp_vector->begin(); it != tmp_vector->end();){
+		it->move();
+		if (it->wallCollision()) {// when a bullet reached to wall, it disappears
+			it->~Bullet();
+			tmp_vector->erase(it++);
+		}
+		else
+			it++;
+	}*/
+
+	/*for (vector <Bullet>::iterator it = Player::player.vectorBullet.begin(); it != Player::player.vectorBullet.end();) {
+		it->move();
+		if (it->wallCollision()) {// when a bullet reached to wall, it disappears
+			it->~Bullet();
+			Player::player.vectorBullet.erase(it++);
+		}
+		else
+			it++;
+	}*/
+
+	/*for (vector <Bullet>::iterator it = vectorBullet.begin(); it != vectorBullet.end();) {
+		it->move();
+		if (it->wallCollision()) {// when a bullet reached to wall, it disappears
+			it->~Bullet();
+			vectorBullet.erase(it++);
+		}
+		else
+			it++;
+	}*/
+}
+
+void Bullet::drawAll() {
+	int size =vectorBullet.size();
+	for (int i = 0; i < size; i++) {
+		vectorBullet[i].draw();
+	}
 }

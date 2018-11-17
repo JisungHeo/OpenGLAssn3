@@ -10,17 +10,20 @@ using namespace std;
 class Bullet
 {
 public:
-	Bullet(int direction, float x, float y);
+	Bullet(float direction, float x, float y);
 	~Bullet();
 	void draw();
 	static void initVAO();
 	void move();
 	bool wallCollision();
 	void rotation();
+	static void update();
+	static void drawAll();
 	float x, y, z;
 	float x_diff,y_diff;
 	float rotateAngle;
 	static GLuint VertexArrayID;
 	static int dummy_obj_size;
-	int direction; //0: up, 1:down, 2:left, 3:right
+	static vector<Bullet> vectorBullet;
+	float direction; //0: up, 1:down, 2:left, 3:right
 };
