@@ -20,9 +20,9 @@ public:
 	void forward();
 	void rotate(float angle);
 	void bulletLoad();
-	bool collision(bool map[ArrSize][ArrSize], int x, int y);
-	bool wallCollision(int x, int y);
+	bool collision(bool map[ArrSize][ArrSize], float x, float y);
+	bool wallCollision(float, float);
 	bool enemyCollision();
-	bool itemCollision(int x, int y);
+	bool itemCollision();
 	bool doing;//to prevent multiple call at once.
 };

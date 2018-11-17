@@ -12,6 +12,7 @@
 using namespace std;
 extern bool map_bullet[ArrSize][ArrSize];
 extern bool map_wall[ArrSize][ArrSize];
+extern bool map_enemy[ArrSize][ArrSize];
 extern GLuint ModelID;
 GLuint Bullet::VertexArrayID;
 int Bullet::dummy_obj_size;
@@ -66,55 +67,6 @@ void Bullet::initVAO() {
 	);
 }
 
-/*back up
-glm::mat4 Bullet::rotation() {
-	switch (this->direction)
-	{
-	case 0: //UP
-		return glRotatef(90, 0, 0, 1);
-		break;
-	case 1://DOWN
-		glRotatef(-90, 0, 0, 1);
-		break;
-	case 2: //LEFT
-		glRotatef(180, 0, 0, 1);
-		break;
-	default: //RIGHT
-		break;
-	}
-}*/
-
-/*
-void Bullet::rotation() {
-	switch (this->direction)
-	{
-	case 0: //UP
-		rotateAngle = 0.0f;
-		break;
-	case 1://DOWN
-		rotateAngle = 180.0f;
-		break;
-	case 2: //LEFT
-		rotateAngle = -90.0f;
-		break;
-	default: //RIGHT
-		rotateAngle = -90.0f;
-	}
-	float dir = direction;
-	if (dir == 0.0f) {//up
-		ro
-	}
-	else if (dir == 90.f) {//down
-		this->y = this->y + 10.0f;
-	}
-	else if (dir == 180.0f) {//left
-		this->x = this->x - 10.0f;
-	}
-	else if (dir == 270.0f) {//right
-		this->y = this->y - 10.0f;
-	}
-}*/
-
 void Bullet::move() {
 	//0: up, 1:down, 2:left, 3:right
 	float dir = this->direction;
@@ -155,46 +107,25 @@ bool Bullet::wallCollision() {
 	return false;
 }
 
+bool Bullet::enemyCollision() {
+	//collision check!!!
+	int x_fit = this->x / 200;
+	int y_fit = this->y / 200;
+	if (map_enemy[x_fit][y_fit]) {//collision
+		map_bullet[x_fit][y_fit] = 0;
+		return true;
+	}
+	return false;
+}
+
 void Bullet::update() {
-	//int size = vectorBullet.size();
 	for (int i = 0; i <vectorBullet.size(); i++) {
 		vectorBullet[i].move();
 		if (vectorBullet[i].wallCollision()) {
 			vectorBullet[i].~Bullet();
 			vectorBullet.erase(vectorBullet.begin() + i);
-			//vectorBullet[i].~Bullet();
 		}
 	}
-	/*vector <Bullet>* tmp_vector = &(Player::player.vectorBullet);
-	for (vector <Bullet>::iterator it = tmp_vector->begin(); it != tmp_vector->end();){
-		it->move();
-		if (it->wallCollision()) {// when a bullet reached to wall, it disappears
-			it->~Bullet();
-			tmp_vector->erase(it++);
-		}
-		else
-			it++;
-	}*/
-
-	/*for (vector <Bullet>::iterator it = Player::player.vectorBullet.begin(); it != Player::player.vectorBullet.end();) {
-		it->move();
-		if (it->wallCollision()) {// when a bullet reached to wall, it disappears
-			it->~Bullet();
-			Player::player.vectorBullet.erase(it++);
-		}
-		else
-			it++;
-	}*/
-
-	/*for (vector <Bullet>::iterator it = vectorBullet.begin(); it != vectorBullet.end();) {
-		it->move();
-		if (it->wallCollision()) {// when a bullet reached to wall, it disappears
-			it->~Bullet();
-			vectorBullet.erase(it++);
-		}
-		else
-			it++;
-	}*/
 }
 
 void Bullet::drawAll() {

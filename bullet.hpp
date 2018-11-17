@@ -16,7 +16,7 @@ public:
 	static void initVAO();
 	void move();
 	bool wallCollision();
-	void rotation();
+	bool enemyCollision();
 	static void update();
 	static void drawAll();
 	float x, y, z;

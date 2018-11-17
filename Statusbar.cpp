@@ -5,10 +5,10 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <vector>
 #include "statusbar.hpp"
+#include "gamemanager.h"
 using namespace std;
 extern int width;
 extern int height;
-
 extern GLuint ColorID;
 
 // function for printing text
@@ -40,18 +40,21 @@ void writeItemInfo() {
 }
 
 void writeRoundInfo() {
+	string game_round_s = std::to_string(GameManager::game_round);
 	printtext(20, 80, "Round");
-	printtext(20, 50, "game_round_s");
+	printtext(20, 50, game_round_s);
 }
 
 void writeTimerInfo() {
+	string time_s = std::to_string(GameManager::time);
 	printtext(110, 80, "Timer");
-	printtext(110, 50, "time_s");
+	printtext(110, 50, time_s);
 }
 
 void writeLifeInfo() {
+	string life_s = std::to_string(GameManager::life);
 	printtext(200, 80, "Life");
-	printtext(200, 50, "3");//life_s);
+	printtext(200, 50, life_s);
 }
 
 // function that draws a status bar below the screen

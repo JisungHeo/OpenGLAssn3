@@ -15,6 +15,7 @@
 #include "gun.hpp"
 #include "bullet.hpp"
 #include "statusbar.hpp"
+#include "gamemanager.h"
 #include <cmath>
 #define CellSize 200
 #define PI 3.141592f
@@ -31,6 +32,9 @@ GLuint VertexArrayID;
 GLuint vertexbuffer;
 unsigned int dummy_obj_size;
 bool third_person_view = false;
+int time_timer=0;
+int enemy_timer=0;
+int bullet_speed =10;
 
 //static Player player; //= Player(50 * 200 + 100, 50 * 200 + 100);
 glm::mat4 cameraMove() {
@@ -76,17 +80,25 @@ void drawEntity() {
 }
 
 void display() {
-	glViewport(0, 0.2*height, width, 0.8*height);
-	glClear(GL_COLOR_BUFFER_BIT);
-	glUseProgram(programID);
-	glm::mat4 Projection = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 5000.0f);
-	glm::mat4 View = cameraMove();
-	glUniformMatrix4fv(ProjectionID, 1, GL_FALSE, &Projection[0][0]);
-	glUniformMatrix4fv(ViewID, 1, GL_FALSE, &View[0][0]);
-	
-	glUniform4f(ColorID, 0.0f, 1.0f, 0.0f, 1.0f);
-	drawEntity();	
-	glutSwapBuffers();
+	if (!GameManager::game_over) { // if game is not over.
+		glViewport(0, 0.2*height, width, 0.8*height);
+		glClear(GL_COLOR_BUFFER_BIT);
+		glUseProgram(programID);
+		glm::mat4 Projection = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 5000.0f);
+		glm::mat4 View = cameraMove();
+		glUniformMatrix4fv(ProjectionID, 1, GL_FALSE, &Projection[0][0]);
+		glUniformMatrix4fv(ViewID, 1, GL_FALSE, &View[0][0]);
+
+		glUniform4f(ColorID, 0.0f, 1.0f, 0.0f, 1.0f);
+		drawEntity();
+		glutSwapBuffers();
+	}
+	else {
+			glViewport(0, 0.2*height, width, 0.8*height);
+			glutSwapBuffers();
+			printtext(210, 60, "Game Over");
+			printtext(180, 50, "Prees 'r' for Retry");
+	}
 }
 
 void reshape(int w, int h) {
@@ -117,28 +129,32 @@ void keyboard(unsigned char key, int x, int y) {
 		break;
 	case ' ':
 		Player::player.bulletLoad();
-		printf("bulletload");
+		break;
+	case 'r':
+		if (GameManager::game_over) {
+			GameManager::game_over = false;
+			GameManager::map_clear();
+			GameManager::gameStatusInit();
+			GameManager::game_round += 1;
+		}
 	}
-	printf("%f\n", Player::player.direction);
+	//printf("%f\n", Player::player.direction);
 	glutPostRedisplay();
 }
 
 void timer(int time) {
-	//if (!game_over) {
-	//bulletUpdate();
-	//itemUpdate();
-	if (time % 100 == 0) {
-	Enemy::update();
-	Bullet::update();
+	if (!GameManager::game_over) {
+		Bullet::update();
+		//itemUpdate();
+		Enemy::update();
+		GameManager::timeUpdate();
 	}
-
-	
-	//timeUpdate();
-	//checkGameOver();
-	time++;
-	//printf("time : %d\n",time);
-	glutTimerFunc(1, timer, time);
+	GameManager::checkGameOver();
+	glutPostRedisplay();
+	glutTimerFunc(bullet_speed, timer, time++);
+	//glutTimerFunc(1, timer, time);
 }
+
 void init() {
 	//shader
 	programID = LoadShaders("myVS.glsl", "myFS.glsl");

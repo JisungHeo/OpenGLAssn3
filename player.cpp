@@ -100,9 +100,8 @@ void Player::forward() {
 		prev_x -= CellSize;
 	else if (direction == 270.0f)
 		prev_y -= CellSize;
-	if (!wallCollision(prev_x/200, prev_y/200))
+	if (!wallCollision(prev_x, prev_y))
 	{
-		printf("wall is not here");
 		if (doing == false) {
 			glutTimerFunc(0, forward_step, NUM_FRAME - 1);
 			doing = true;
@@ -134,15 +133,15 @@ void Player::rotate(float angle) {
 	}
 }
 
-bool Player::collision(bool map[ArrSize][ArrSize], int x, int y) {
-	return map[x][y] == 1;
+bool Player::collision(bool map[ArrSize][ArrSize], float x, float y) {
+	return map[int(x/200)][int(y/200)] == 1;
 	/*bool upCollision = map[x / 50][(y + 25) / 50] == 1;
 	bool downCollision = map[x / 50][(y - 25) / 50] == 1;
 	bool leftCollision = map[(x - 25) / 50][y / 50] == 1;
 	bool rightCollision = map[(x + 25) / 50][y / 50] == 1;
 	return upCollision || downCollision || leftCollision || rightCollision;*/
 }
-bool Player::wallCollision(int x, int y)
+bool Player::wallCollision(float x, float y)
 {
 	return collision(map_wall, x, y);
 }
@@ -152,7 +151,7 @@ bool Player::enemyCollision()
 	return collision(map_enemy, x, y);
 }
 
-bool Player::itemCollision(int x, int y)
+bool Player::itemCollision()
 {
 	return collision(map_item, x, y);
 }

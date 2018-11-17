@@ -5,6 +5,7 @@
 #include "objloader.hpp"
 #include "player.hpp"
 #include "map.hpp"
+#include "gamemanager.h"
 
 #define CellSize 200
 #define ArrSize 100
@@ -18,6 +19,8 @@ extern bool map_enemy[ArrSize][ArrSize];
 extern bool map_wall[ArrSize][ArrSize];
 extern bool map_bullet[ArrSize][ArrSize];
 vector<Enemy> Enemy::vectorEnemy;
+extern int enemy_timer;
+extern int bullet_speed;
 
 Enemy::Enemy(float x, float y) {
 	this->x = x;
@@ -115,13 +118,10 @@ void Enemy::drawAll() {
 
 bool Enemy::wallCollision(int x, int y)
 {
-	//if (map_wall[x][y])
-		//printf("wall collision");
 	return map_wall[x][y] == 1;
 }
 
 bool Enemy::bulletCollision() {
-	//printf("x = %f, y = %f", x, y);
 	return map_bullet[int(x/200)][int(y/200)] == 1;
 }
 
@@ -244,37 +244,27 @@ int Enemy::getDirectionWithNoWall() //Return direction with no Wall
 	int dir;
 	do {
 		dir = rand() % 4;
-		//printf("dir : %d\n", dir);
 	} while (isWallThere(dir));
 	return dir;
 }
 
 void Enemy::update() {
-	/*for (vector <Enemy>::iterator it = vectorEnemy.begin(); it != vectorEnemy.end();) {
-		it->move();
-	    if (it->bulletCollision()) {// when a bullet reached to wall, it disappears
-			int x_tmp = ((*it).x) / 200;
-			int y_tmp = ((*it).y) / 200;
-			map_enemy[x_tmp][y_tmp] = 0;
-			(*it).~Enemy();
-			vectorEnemy.erase(i++);
-		}
-		else
-			it++;
-	}*/
-	//int size = vectorEnemy.size();
 	for (int i = 0; i < vectorEnemy.size(); i++) {
-		vectorEnemy[i].move();
 		if (vectorEnemy[i].bulletCollision()) {
-			printf("bullet collision");
-			vectorEnemy[i].~Enemy();
-			vectorEnemy.erase(vectorEnemy.begin() + i);
 			int x_tmp = int(vectorEnemy[i].x / 200);
 			int y_tmp = int(vectorEnemy[i].y / 200);
 			map_enemy[x_tmp][y_tmp] = 0;
-			//vectorBullet[i].~Bullet();
+			vectorEnemy[i].~Enemy();
+			vectorEnemy.erase(vectorEnemy.begin() + i);
 		}
 	}
-
+	if (enemy_timer >= 20 * bullet_speed) {
+		for (int i = 0; i < vectorEnemy.size(); i++) {
+			vectorEnemy[i].move();
+		}
+		enemy_timer = 0;
+		GameManager::lifeUpdate();
+	}
+	enemy_timer += bullet_speed;// enemy move timer update
 	glutPostRedisplay();
 }
