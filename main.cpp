@@ -65,15 +65,13 @@ void display() {
 	glViewport(0, 0.2*height, width, 0.8*height);
 	glClear(GL_COLOR_BUFFER_BIT);
 	glUseProgram(programID);
-	glm::mat4 Projection = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 10000.0f);
+	glm::mat4 Projection = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 5000.0f);
 	glm::mat4 View = cameraMove();
 	glUniformMatrix4fv(ProjectionID, 1, GL_FALSE, &Projection[0][0]);
 	glUniformMatrix4fv(ViewID, 1, GL_FALSE, &View[0][0]);
 	
 	glUniform4f(ColorID, 0.0f, 1.0f, 0.0f, 1.0f);
 	Player::player.draw();
-	Enemy enemy(200.0f,0.0f);
-	enemy.draw();
 	Wall::drawAll();
 	Enemy::drawAll();
 	Item::drawAll();

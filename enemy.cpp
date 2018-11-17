@@ -105,7 +105,7 @@ void Enemy::initMap() {
 	for (int i = 0; i < ArrSize; i++)
 		for (int j = 0; j < ArrSize; j++)
 			if(map_enemy[i][j])
-				Enemy::vectorEnemy.push_back(Enemy(i*CellSize, j*CellSize));
+				Enemy::vectorEnemy.push_back(Enemy(i*CellSize+CellSize/2, j*CellSize+CellSize/2));
 }
 void Enemy::drawAll() {
 	for (int i = 0; i < vectorEnemy.size(); i++)
