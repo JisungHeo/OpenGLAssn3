@@ -78,10 +78,10 @@ void Item::update() {
 
 void Item::initMap() {
 	map_item[50][49] = 1;
-	map_item[50][46] = 1;
+	//map_item[50][46] = 1;
 	int half = CellSize / 2;
 	vectorItem.push_back(Item(0, 50 * CellSize +half, 49 * CellSize+half));
-	vectorItem.push_back(Item(1, 50 * CellSize + half, 46 * CellSize+half));
+	//vectorItem.push_back(Item(1, 50 * CellSize + half, 46 * CellSize+half));
 }
 void Item::drawAll() {
 	for (int i = 0; i < vectorItem.size(); i++)

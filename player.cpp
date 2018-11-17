@@ -175,4 +175,14 @@ void Player::bulletLoad() {
 	if (player.itemlist[1])
 		bullet_speed = 2;*/
 	Bullet:: vectorBullet.push_back(Bullet(direction, bul_x, bul_y));
+	if (player.itemlist[0]) {
+		if (direction == 90.0f || direction == 270.0f) {
+			Bullet::vectorBullet.push_back(Bullet(direction, bul_x - CellSize, bul_y));
+			Bullet::vectorBullet.push_back(Bullet(direction, bul_x + CellSize, bul_y));
+		}
+		else if (direction == 0.0f || direction == 180.0f) {
+			Bullet::vectorBullet.push_back(Bullet(direction, bul_x, bul_y - CellSize));
+			Bullet::vectorBullet.push_back(Bullet(direction, bul_x, bul_y + CellSize));
+		}
+	}
 }

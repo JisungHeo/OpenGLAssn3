@@ -5,7 +5,7 @@
 #include "objloader.hpp"
 #include "player.hpp"
 #include "map.hpp"
-#include "gamemanager.h"
+#include "gamemanager.hpp"
 
 #define CellSize 200
 #define ArrSize 100
@@ -304,13 +304,8 @@ void Enemy::update() {
 			vectorEnemy.erase(vectorEnemy.begin() + i);
 		}
 	}
-	if (enemy_timer >= 20 * bullet_speed) {
-		for (int i = 0; i < vectorEnemy.size(); i++) {
-			vectorEnemy[i].move();
-		}
-		enemy_timer = 0;
-		GameManager::lifeUpdate();
+	for (int i = 0; i < vectorEnemy.size(); i++) {
+		vectorEnemy[i].move_step();
 	}
-	enemy_timer += bullet_speed;// enemy move timer update
 	glutPostRedisplay();
 }

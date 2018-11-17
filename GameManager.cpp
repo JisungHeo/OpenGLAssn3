@@ -1,4 +1,4 @@
-#include "gamemanager.h"
+#include "gamemanager.hpp"
 #include <iostream>
 #include "enemy.hpp"
 #include "bullet.hpp"
@@ -39,15 +39,12 @@ void GameManager::timeUpdate() {
 //Return if game is over
 void GameManager::checkGameOver() {
 	if (life == 0) {
-		cout << "life done" << endl;
 		game_over = true;
 	}
 	else if (Enemy::vectorEnemy.empty()) {
-		cout << "enemy empty" << endl;
 		game_over = true;
 	}
 	else if (time == 0) {
-		cout << "time up" << endl;
 		game_over = true;
 	}
 }
@@ -75,11 +72,18 @@ void GameManager::map_clear() {
 		Bullet::vectorBullet[i].~Bullet();
 		Bullet::vectorBullet.erase(Bullet::vectorBullet.begin() + i);
 	}
-
+	for (int i = 0; i < Wall::vectorWall.size(); i++) {
+		Wall::vectorWall[i].~Wall();
+		Wall::vectorWall.erase(Wall::vectorWall .begin() + i);
+	}
+	Item::vectorItem.clear();
+	Enemy::vectorEnemy.clear();
+	Bullet::vectorBullet.clear();
+	Wall::vectorWall.clear();
 	//map_data clear;
 	int i, j;
-	for (i = 0; i < 50; i++) {
-		for (j = 0; j < 50; j++) {
+	for (i = 0; i < ArrSize; i++) {
+		for (j = 0; j < ArrSize; j++) {
 			map_enemy[i][j] = 0;
 			map_bullet[i][j] = 0;
 			map_item[i][j] = 0;

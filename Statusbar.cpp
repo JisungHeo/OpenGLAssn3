@@ -5,7 +5,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <vector>
 #include "statusbar.hpp"
-#include "gamemanager.h"
+#include "gamemanager.hpp"
 #include "player.hpp"
 using namespace std;
 extern int width;
@@ -36,8 +36,8 @@ void writeItemInfo() {
 	printtext(330, 80, "Item List");
 	if(Player::player.itemlist[0])
 		printtext(330, 50, "three bullets");
-	if (Player::player.itemlist[1])
-		printtext(330, 30, "speed up bullets");
+	//if (Player::player.itemlist[1])
+	//	printtext(330, 30, "speed up bullets");
 }
 
 void writeRoundInfo() {

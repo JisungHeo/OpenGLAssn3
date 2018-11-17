@@ -15,7 +15,7 @@
 #include "gun.hpp"
 #include "bullet.hpp"
 #include "statusbar.hpp"
-#include "gamemanager.h"
+#include "gamemanager.hpp"
 #include <cmath>
 #define CellSize 200
 #define PI 3.141592f
@@ -107,8 +107,7 @@ void keyboard(unsigned char key, int x, int y) {
 	float angle;
 	switch (key) {
 	case 'w':
-		Player::player.
-			Player::player.forward();
+		Player::player.forward();
 		break;
 
 	case 'a':
@@ -141,9 +140,7 @@ void update(int time) {
 		Item::update();
 		Enemy::update();
 		GameManager::timeUpdate();
-		for (int i = 0; i < Enemy::vectorEnemy.size(); i++) {
-			Enemy::vectorEnemy[i].move_step();
-		}
+		GameManager::lifeUpdate();
 	}
 	GameManager::checkGameOver();
 	glutTimerFunc(50, update, time++);
@@ -174,11 +171,16 @@ void init() {
 
 void mouse(int button, int state, int x, int y) {
 	if (state == GLUT_DOWN && button == GLUT_LEFT_BUTTON) {
-		Player::player.bulletLoad();
-		Player::vertexArrayID = Player::vertexArrayIDs[9];
+		if (Player::player.doing == false) {
+			Player::player.bulletLoad();
+			Player::vertexArrayID = Player::vertexArrayIDs[9];
+			Player::player.doing = true;
+		}
 	}
-	else if (state == GLUT_UP && button == GLUT_LEFT_BUTTON)
+	else if (state == GLUT_UP && button == GLUT_LEFT_BUTTON) {
 		Player::vertexArrayID = Player::vertexArrayIDs[0];
+		Player::player.doing = false;
+	}
 }
 void main(int argc, char **argv) {  	
 	glutInit(&argc, argv); 
