@@ -17,6 +17,7 @@
 #include "statusbar.hpp"
 #include <cmath>
 #define CellSize 200
+#define PI 3.141592f
 using namespace std;
 
 int width;
@@ -40,63 +41,21 @@ glm::mat4 cameraMove() {
 	float dtx = 0.0f;
 	float dty = 0.0f;//offset for third-person view
 	float dtz = 0.0f;
-	if (third_person_view)
-		dtz = 400.0f;
+	glm::mat4 rotateMatrix = glm::rotate(glm::mat4(1.0f), PI/180*Player::player.direction, glm::vec3(0, 0, 1));
+	glm::vec4 thirdVector = rotateMatrix * glm::vec4(-1000.0f, 0.0f, 400.0f, 1.0f);
+	glm::vec4 headVector = rotateMatrix * glm::vec4(20.0f, 0.0f, 0.0f, 1.0f);
+	glm::vec4 atVector = rotateMatrix * glm::vec4(1000.0f, 0.0f, 0.0f,1.0f);
+	if (third_person_view) {
+		dtx = thirdVector.x;
+		dty = thirdVector.y;
+		dtz = thirdVector.z;
+	}
 	else
-		dtz = 0.0f;
-
-	if (Player::player.direction == 0.0f) {
-		dx = 1000.0f;
-		dy = 0.0f;
-		dhx = 20.0f;
-		dhy = 0.0f;
-		if (third_person_view) {
-			dtx = -1000.0f;
-			dty = 0.0f;
-		}
-		else {
-			dtx = dty = 0.0f;
-		}
-	}
-	else if (Player::player.direction == 90.0f) {
-		dx = 0.0f;
-		dy = 1000.0f;
-		dhx = 0.0f;
-		dhy = 20.0f;
-		if (third_person_view) {
-			dtx = 0.0f;
-			dty = -1000.0f;
-		}
-		else {
-			dtx = dty = 0.0f;
-		}
-	}
-	else if (Player::player.direction == 180.0f) {
-		dx = -1000.0f;
-		dy = 0.0f;
-		dhx = -20.0f;
-		dhy = 0.0f;
-		if (third_person_view) {
-			dtx = 1000.0f;
-			dty = 0.0f;
-		}
-		else {
-			dtx = dty = 0.0f;
-		}
-	}
-	else if (Player::player.direction == 270.0f) {
-		dx = 0.0f;
-		dy = -1000.0f;
-		dhx = 0.0f;
-		dhy = -20.0f;
-		if (third_person_view) {
-			dtx = 0.0f;
-			dty = 1000.0f;
-		}
-		else {
-			dtx = dty = 0.0f;
-		}
-	}
+		dtx = dty = dtz = 0.0f;
+	dhx = headVector.x;
+	dhy = headVector.y;
+	dx = atVector.x;
+	dy = atVector.y;
 	return glm::lookAt(glm::vec3(Player::player.x+dhx+dtx, Player::player.y+dhy+dty, 170.0f+dtz),
 		glm::vec3(Player::player.x+dx, Player::player.y+dy, 169.0f),
 		glm::vec3(0.0f, 0.0f, 1.0f));
@@ -120,14 +79,13 @@ void display() {
 	glViewport(0, 0.2*height, width, 0.8*height);
 	glClear(GL_COLOR_BUFFER_BIT);
 	glUseProgram(programID);
-	glm::mat4 Projection = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 10000.0f);
+	glm::mat4 Projection = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 5000.0f);
 	glm::mat4 View = cameraMove();
 	glUniformMatrix4fv(ProjectionID, 1, GL_FALSE, &Projection[0][0]);
 	glUniformMatrix4fv(ViewID, 1, GL_FALSE, &View[0][0]);
 	
 	glUniform4f(ColorID, 0.0f, 1.0f, 0.0f, 1.0f);
-	drawEntity();
-	
+	drawEntity();	
 	glutSwapBuffers();
 }
 
@@ -142,7 +100,8 @@ void keyboard(unsigned char key, int x, int y) {
 	float angle;
 	switch (key) {
 	case 'w':
-		Player::player.foward();
+		Player::player.
+		Player::player.forward();
 		break;
 
 	case 'a':
@@ -180,7 +139,6 @@ void timer(int time) {
 	//printf("time : %d\n",time);
 	glutTimerFunc(1, timer, time);
 }
-
 void init() {
 	//shader
 	programID = LoadShaders("myVS.glsl", "myFS.glsl");
