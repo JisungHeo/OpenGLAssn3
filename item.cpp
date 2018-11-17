@@ -4,6 +4,7 @@
 #include <glm/mat4x4.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include "map.hpp"
+#include "player.hpp"
 #define PI 3.14159
 extern GLuint ModelID;
 extern GLuint ColorID;
@@ -56,16 +57,31 @@ void Item::draw() {
 	glBindVertexArray(0);
 }
 
-bool Item::playerCollision()
-{
-	//**thinking point
-	return false;
-	//return (this->x == player.x) && (this->y == player.y);
+bool Item::playerCollision(int x, int y) {
+	return map_item[x][y] != 0;
 }
 
+void Item::update() {
+	int fit_x = int(Player::player.x / 200);
+	int fit_y = int(Player::player.y / 200);
+	for (int i = 0; i <vectorItem.size(); i++) {
+		if (vectorItem[i].playerCollision(fit_x,fit_y)) {
+			int type = vectorItem[i].type;
+			Player::player.itemlist[type] = true;
+			map_item[fit_x][fit_y] = 0;
+			vectorItem[i].~Item();
+			vectorItem.erase(vectorItem.begin() + i);
+		}
+	}
+}
+
+
 void Item::initMap() {
-	map_item[50][51] = 1;
-	vectorItem.push_back(Item(0, 50 * CellSize, 51 * CellSize));
+	map_item[50][49] = 1;
+	map_item[50][46] = 1;
+	int half = CellSize / 2;
+	vectorItem.push_back(Item(0, 50 * CellSize +half, 49 * CellSize+half));
+	vectorItem.push_back(Item(1, 50 * CellSize + half, 46 * CellSize+half));
 }
 void Item::drawAll() {
 	for (int i = 0; i < vectorItem.size(); i++)

@@ -6,6 +6,7 @@
 #include <vector>
 #include "statusbar.hpp"
 #include "gamemanager.h"
+#include "player.hpp"
 using namespace std;
 extern int width;
 extern int height;
@@ -33,10 +34,10 @@ void printtext(int x, int y, string String)
 
 void writeItemInfo() {
 	printtext(330, 80, "Item List");
-	// when player got an item1
-	printtext(330, 50, "three bullets");
-	// when the player got item2
-	printtext(330, 30, "speed up bullets");
+	if(Player::player.itemlist[0])
+		printtext(330, 50, "three bullets");
+	if (Player::player.itemlist[1])
+		printtext(330, 30, "speed up bullets");
 }
 
 void writeRoundInfo() {

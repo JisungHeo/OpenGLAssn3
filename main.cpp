@@ -67,14 +67,9 @@ glm::mat4 cameraMove() {
 
 void drawEntity() {
 	Player::player.draw();
-	//Enemy enemy(200.0f, 0.0f);
-	//enemy.draw();
 	Wall::drawAll();
 	Enemy::drawAll();
 	Item::drawAll();
-	Gun gun(50 * CellSize, 49 * CellSize);
-	gun.draw();
-	Bullet bullet(0, 50 * CellSize, 48 * CellSize);
 	Bullet::drawAll();
 	drawStatusBar();
 }
@@ -139,15 +134,11 @@ void keyboard(unsigned char key, int x, int y) {
 }
 
 
-void timer(int time) {
-	
-	
-}
 
 void update(int time) {
 	if (!GameManager::game_over) {
 		Bullet::update();
-		//itemUpdate();
+		Item::update();
 		Enemy::update();
 		GameManager::timeUpdate();
 		for (int i = 0; i < Enemy::vectorEnemy.size(); i++) {

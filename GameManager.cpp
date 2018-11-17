@@ -18,6 +18,7 @@ extern int time_timer,enemy_timer,bullet_speed;
 extern bool map_enemy[ArrSize][ArrSize];
 extern bool map_wall[ArrSize][ArrSize];
 extern bool map_bullet[ArrSize][ArrSize];
+extern bool map_item[ArrSize][ArrSize];
 GameManager::GameManager()
 {
 }
@@ -59,10 +60,10 @@ void GameManager::lifeUpdate() {
 
 void GameManager::map_clear() {
 	//Item
-	/*for (int i = 0; i < Item::vectorItem.size(); i++) {
-		Item::vectorItem[i].~Enemy();
-		Item::vectorItem.erase(Item::vectorItembegin() + i);
-	}*/
+	for (int i = 0; i < Item::vectorItem.size(); i++) {
+		Item::vectorItem[i].~Item();
+		Item::vectorItem.erase(Item::vectorItem.begin() + i);
+	}
 
 	//Enemy
 	for (int i = 0; i < Enemy::vectorEnemy.size(); i++) {
@@ -81,7 +82,7 @@ void GameManager::map_clear() {
 		for (j = 0; j < 50; j++) {
 			map_enemy[i][j] = 0;
 			map_bullet[i][j] = 0;
-			//map_item[i][j] = 0;
+			map_item[i][j] = 0;
 			map_wall[i][j] = 0;
 		}
 	}
@@ -93,8 +94,8 @@ void GameManager::gameStatusInit() {
 	Item::initMap();
 	Player::player.x = 50 * CellSize + CellSize / 2;
 	Player::player.y = 50 * CellSize + CellSize / 2;
-	//Player::player.itemlist[0] = false;
-	//player.itemlist[1] = false;
+	Player::player.itemlist[0] = false;
+	Player::player.itemlist[1] = false;
 	life = 4;
 	time = 150;
 	bullet_speed = 4;

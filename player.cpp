@@ -17,6 +17,9 @@ Player::Player(float x, float y) {
 	this->y = y;
 	this->direction = 90.0f;
 	this->doing = false;
+	this->itemlist = (bool *)malloc(2 * sizeof(bool));//item inventory can hold 2 items
+	itemlist[0] = false;
+	itemlist[1] = false;
 }
 
 GLuint Player::vertexArrayID;
@@ -61,7 +64,6 @@ void Player::initVAO() {
 			(void*)0            // array buffer 
 		);
 		dummy_obj_size = vertices.size();
-		printf("%d\n", dummy_obj_size);
 	}
 	vertexArrayID = vertexArrayIDs[0];
 }

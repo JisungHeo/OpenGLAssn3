@@ -10,7 +10,6 @@ class Item
 public:
 	Item(int type, float x, float y);
 	void draw();
-	bool playerCollision();
 	float x,y,z;
 	int type;// subclasses
 	static GLuint vertexArrayID;
@@ -19,4 +18,6 @@ public:
 	static void initVAO();
 	static void initMap();
 	static void drawAll();
+	static void update();
+	bool playerCollision(int, int);
 };
