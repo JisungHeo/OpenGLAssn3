@@ -12,7 +12,7 @@ public:
 	float y;
 	float direction;//degree x:0, y:90.0f, -x:180.0f, -y:270.0f
 	static GLuint vertexArrayID;
-	static GLuint vertexArrayIDs[9];
+	static GLuint vertexArrayIDs[10];
 	void draw();
 	static void initVAO();
 	static Player player;

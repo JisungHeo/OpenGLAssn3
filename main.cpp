@@ -113,7 +113,7 @@ void keyboard(unsigned char key, int x, int y) {
 	switch (key) {
 	case 'w':
 		Player::player.
-		Player::player.forward();
+			Player::player.forward();
 		break;
 
 	case 'a':
@@ -127,9 +127,6 @@ void keyboard(unsigned char key, int x, int y) {
 	case 'q':
 		third_person_view = !third_person_view;
 		break;
-	case ' ':
-		Player::player.bulletLoad();
-		break;
 	case 'r':
 		if (GameManager::game_over) {
 			GameManager::game_over = false;
@@ -138,21 +135,28 @@ void keyboard(unsigned char key, int x, int y) {
 			GameManager::game_round += 1;
 		}
 	}
-	//printf("%f\n", Player::player.direction);
 	glutPostRedisplay();
 }
 
+
 void timer(int time) {
+	
+	
+}
+
+void update(int time) {
 	if (!GameManager::game_over) {
 		Bullet::update();
 		//itemUpdate();
 		Enemy::update();
 		GameManager::timeUpdate();
+		for (int i = 0; i < Enemy::vectorEnemy.size(); i++) {
+			Enemy::vectorEnemy[i].move_step();
+		}
 	}
 	GameManager::checkGameOver();
+	glutTimerFunc(50, update, time++);
 	glutPostRedisplay();
-	glutTimerFunc(bullet_speed, timer, time++);
-	//glutTimerFunc(1, timer, time);
 }
 
 void init() {
@@ -176,6 +180,15 @@ void init() {
 	Item::initMap();
 	glutSwapBuffers();
 }
+
+void mouse(int button, int state, int x, int y) {
+	if (state == GLUT_DOWN && button == GLUT_LEFT_BUTTON) {
+		Player::player.bulletLoad();
+		Player::vertexArrayID = Player::vertexArrayIDs[9];
+	}
+	else if (state == GLUT_UP && button == GLUT_LEFT_BUTTON)
+		Player::vertexArrayID = Player::vertexArrayIDs[0];
+}
 void main(int argc, char **argv) {  	
 	glutInit(&argc, argv); 
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA);  
@@ -185,8 +198,9 @@ void main(int argc, char **argv) {
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
 	glutKeyboardFunc(keyboard);
+	glutMouseFunc(mouse);
 	//glutTimerFunc(0, timer, 0);
-	glutTimerFunc(10, timer, 1);
+	glutTimerFunc(10, update, 0);
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f); 
 	glewInit();
 	init();

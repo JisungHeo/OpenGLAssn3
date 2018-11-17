@@ -20,7 +20,7 @@ Player::Player(float x, float y) {
 }
 
 GLuint Player::vertexArrayID;
-GLuint Player::vertexArrayIDs[9] = { 0 };
+GLuint Player::vertexArrayIDs[10] = { 0 };
 int Player::dummy_obj_size;
 void Player::draw() {
 	glBindVertexArray(vertexArrayID);
@@ -36,14 +36,11 @@ void Player::draw() {
 }
 void Player::initVAO() {
 	char path[100];
-	for (int i=0; i < NUM_FRAME+1; i++) {
+	for (int i=0; i < NUM_FRAME+2; i++) {
 		vector<glm::vec3> vertices;
 		vector<glm::vec2> uvs;
 		vector<glm::vec3> normals; // Won't be used at the moment.
-		if (i == 0)
-			sprintf_s(path, "obj_files/dummy_obj.obj");
-		else
-			sprintf_s(path, "obj_files/dummy_obj_%d.obj", i);
+		sprintf_s(path, "obj_files/dummy_obj_%d.obj", i);
 		bool res = loadOBJ(path, vertices, uvs, normals);
 
 		glGenVertexArrays(1, &vertexArrayIDs[i]);
@@ -64,6 +61,7 @@ void Player::initVAO() {
 			(void*)0            // array buffer 
 		);
 		dummy_obj_size = vertices.size();
+		printf("%d\n", dummy_obj_size);
 	}
 	vertexArrayID = vertexArrayIDs[0];
 }

@@ -17,9 +17,9 @@ public:
 	bool bulletCollision();
 	void move();
 	//bool wallCollision(int, int);
-	bool isWallThere(int);
+	bool isWallThere(float);
 	bool isNearPlayer(int, int); 
-	int getDirectionWithNoWall();
+	float getDirectionWithNoWall();
 	int getPlayerPartition(int, int);
 	int getDirectionToMove();
 	static void update();
@@ -28,10 +28,15 @@ public:
 	vector<glm::vec3> vertices;
 	vector<glm::vec2> uvs;
 	GLuint VertexArrayID;
+	static GLuint vertexArrayIDs[9];
 	float x;
 	float y;
+	float direction;
 	static GLuint vertexArrayID;
 	static int dummy_obj_size;
+	int action;//0: stationary, 1: forward, 2:rotate
+	int frame;
+	void move_step();
 };
 
 enum direction { UP, DOWN, RIGHT, LEFT };

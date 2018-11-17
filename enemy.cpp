@@ -10,6 +10,7 @@
 #define CellSize 200
 #define ArrSize 100
 #define PI 3.141592f
+#define NUM_FRAME 8
 ///using namespace std;
 
 //Player player = Player(50 * 200 + 100, 50 * 200 + 100);
@@ -19,12 +20,17 @@ extern bool map_enemy[ArrSize][ArrSize];
 extern bool map_wall[ArrSize][ArrSize];
 extern bool map_bullet[ArrSize][ArrSize];
 vector<Enemy> Enemy::vectorEnemy;
+
 extern int enemy_timer;
 extern int bullet_speed;
+GLuint Enemy::vertexArrayIDs[9];
+
 
 Enemy::Enemy(float x, float y) {
 	this->x = x;
 	this->y = y;
+	this->action = 0;
+	this->frame = 0;
 }
 
 GLuint Enemy::vertexArrayID;
@@ -32,6 +38,8 @@ int Enemy::dummy_obj_size;
 void Enemy::draw() {
 	glBindVertexArray(vertexArrayID);
 	glm::mat4 Model = glm::translate(glm::mat4(1.0f), glm::vec3(x,y, 0.0f)) *
+		glm::rotate(glm::mat4(1.0f), PI / 180 * direction, glm::vec3(0, 0, 1)) *
+		glm::rotate(glm::mat4(1.0f), PI / 180 * 90.0f, glm::vec3(0, 0, 1)) *
 		glm::rotate(glm::mat4(1.0f), PI / 180 * 90.0f, glm::vec3(1, 0, 0));
 	glUniformMatrix4fv(ModelID, 1, GL_FALSE, &Model[0][0]);
 	glUniform4f(ColorID, 1.0f, 0.0f, 0.0f, 1.0f);
@@ -67,7 +75,11 @@ void Enemy::draw2() {
 }*/
 
 void Enemy::initVAO() {
-	vector<glm::vec3> vertices;
+	vertexArrayID = Player::vertexArrayID;
+	for (int i=0;i<9;i++)
+		vertexArrayIDs[i] = Player::vertexArrayIDs[i];
+	dummy_obj_size = Player::dummy_obj_size;
+	/*vector<glm::vec3> vertices;
 	vector<glm::vec2> uvs;
 	vector<glm::vec3> normals; // Won't be used at the moment.
 	bool res = loadOBJ("obj_files/dummy_obj_red.obj", vertices, uvs, normals);
@@ -89,7 +101,8 @@ void Enemy::initVAO() {
 		0,                  // stride
 		(void*)0            // array buffer 
 	);
-	dummy_obj_size = vertices.size();
+	dummy_obj_size = vertices.size();*/
+
 }
 
 
@@ -129,18 +142,47 @@ void Enemy::move()
 {
 	float prev_x = x;
 	float prev_y = y;
-	int direction = getDirectionToMove();
-	if (direction == UP)
+	float direction = getDirectionToMove();
+	if (direction == 90.0f)
 		y += CellSize;
-	else if (direction ==DOWN)
+	else if (direction ==270.0f)
 		y -= CellSize;
-	else if (direction == RIGHT)
+	else if (direction == 0.0f)
 		x += CellSize;
-	else if (direction == LEFT)
+	else if (direction == 180.0f)
 		x -= CellSize;
 	
 	map_enemy[int(prev_x/200)][int(prev_y/200)] = 0;
 	map_enemy[int(x/200)][int(y/200)] = 1;
+}
+
+void Enemy::move_step()
+{
+	float prev_x = x;
+	float prev_y = y;
+	if (action == 0) {
+		direction = getDirectionToMove();
+		action = 1;
+		frame = 8;
+	}
+	if (action == 1) {
+		if (direction == 90.0f)
+			y += CellSize / NUM_FRAME;
+		else if (direction == 270.0f)
+			y -= CellSize / NUM_FRAME;
+		else if (direction == 0.0f)
+			x += CellSize / NUM_FRAME;
+		else if (direction == 180.0f)
+			x -= CellSize / NUM_FRAME;
+
+		map_enemy[int(prev_x / 200)][int(prev_y / 200)] = 0;
+		map_enemy[int(x / 200)][int(y / 200)] = 1;
+		vertexArrayID = vertexArrayIDs[NUM_FRAME+1 - frame];
+	}
+
+	frame--;
+	if (frame == 0)
+		action = 0;
 }
 
 bool Enemy::isNearPlayer(int dist_x, int dist_y)
@@ -179,15 +221,17 @@ int Enemy::getPlayerPartition(int dist_x, int dist_y)
 	return partition;
 }
 
-bool Enemy::isWallThere(int direction) {//check if there is wall in certain direction
+bool Enemy::isWallThere(float direction) {//check if there is wall in certain direction
 	int new_x = this->x;
 	int new_y = this->y;
-	switch (direction) {
-	case UP: new_y+=CellSize; break;
-	case DOWN: new_y-=CellSize; break;
-	case RIGHT: new_x+=CellSize; break;
-	case LEFT: new_x-=CellSize; break;
-	}
+	if (direction == 90.0f)
+		new_y += CellSize;
+	else if (direction == 270.0f)
+		new_y -= CellSize;
+	else if(direction == 180.0f)
+		new_x-=CellSize;
+	else if(direction == 0.0f)
+		new_x+=CellSize;
 	return wallCollision(new_x/200, new_y/200);
 }
 
@@ -204,33 +248,33 @@ int Enemy::getDirectionToMove()//return Direction according to partition
 		//UP, DOWN, RIGHT, LEFT
 		switch (partition) {
 		case 1://up, right
-			direction = UP;
+			direction = 90.0f;
 			if (isWallThere(direction))
-				direction = RIGHT;
+				direction = 0.0f;
 			break;
 		case 2://up, left
-			direction = LEFT;
+			direction = 180.0f;
 			if (isWallThere(direction))
-				direction = UP;
+				direction = 90.0f;
 			break;
 		case 3://down, left
-			direction = DOWN;
+			direction = 270.0f;
 			if (isWallThere(direction))
-				direction = LEFT;
+				direction = 180.0f;
 			break;
 		case 4://down, right
-			direction = RIGHT;
+			direction = 0.0f;
 			if (isWallThere(direction))
-				direction = DOWN;
+				direction = 270.0f;
 			break;
 		case 5:
-			direction = UP; break;
+			direction = 90.0f; break;
 		case 6:
-			direction = LEFT; break;
+			direction = 180.0f; break;
 		case 7:
-			direction = DOWN; break;
+			direction = 270.0f; break;
 		case 8:
-			direction = RIGHT; break;
+			direction = 0.0f; break;
 		}
 		//if there are walls everywhere
 		if (isWallThere(direction))
@@ -239,13 +283,15 @@ int Enemy::getDirectionToMove()//return Direction according to partition
 	return direction;
 }
 
-int Enemy::getDirectionWithNoWall() //Return direction with no Wall
+float Enemy::getDirectionWithNoWall() //Return direction with no Wall
 {
 	int dir;
+	float directions[4] = { 90.0f,270.0f,180.0f,0.0f };
 	do {
 		dir = rand() % 4;
-	} while (isWallThere(dir));
-	return dir;
+	} while (isWallThere(directions[dir]));
+	return directions[dir];
+
 }
 
 void Enemy::update() {
