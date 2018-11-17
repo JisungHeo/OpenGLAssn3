@@ -123,21 +123,24 @@ void keyboard(unsigned char key, int x, int y) {
 	glutPostRedisplay();
 }
 
-void timer(int time) {
+void update(int time) {
 	//if (!game_over) {
 	//bulletUpdate();
 	//itemUpdate();
-	if (time % 100 == 0) {
+	//if (time % 100 == 0) {
 	Enemy::update();
-	Bullet::update();
+	for (int i = 0; i < Enemy::vectorEnemy.size(); i++) {
+		Enemy::vectorEnemy[i].move_step();
 	}
+	Bullet::update();
+	//}
 
 	
 	//timeUpdate();
 	//checkGameOver();
 	time++;
 	//printf("time : %d\n",time);
-	glutTimerFunc(1, timer, time);
+	glutTimerFunc(50, update, time);
 }
 void init() {
 	//shader
@@ -170,7 +173,7 @@ void main(int argc, char **argv) {
 	glutReshapeFunc(reshape);
 	glutKeyboardFunc(keyboard);
 	//glutTimerFunc(0, timer, 0);
-	glutTimerFunc(10, timer, 1);
+	glutTimerFunc(10, update, 0);
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f); 
 	glewInit();
 	init();

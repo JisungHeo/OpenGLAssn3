@@ -40,9 +40,9 @@ void Player::initVAO() {
 		vector<glm::vec3> vertices;
 		vector<glm::vec2> uvs;
 		vector<glm::vec3> normals; // Won't be used at the moment.
-		if (i == 0)
-			sprintf_s(path, "obj_files/dummy_obj.obj");
-		else
+		//if (i == 0)
+			//sprintf_s(path, "obj_files/dummy_obj.obj");
+		//else
 			sprintf_s(path, "obj_files/dummy_obj_%d.obj", i);
 		bool res = loadOBJ(path, vertices, uvs, normals);
 

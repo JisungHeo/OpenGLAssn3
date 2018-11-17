@@ -25,5 +25,5 @@ public:
 	static GLuint VertexArrayID;
 	static int dummy_obj_size;
 	static vector<Bullet> vectorBullet;
-	float direction; //0: up, 1:down, 2:left, 3:right
+	float direction; //0:, 1:down, 2:left, 3:right
 };

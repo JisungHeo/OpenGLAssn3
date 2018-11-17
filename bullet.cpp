@@ -22,6 +22,7 @@ Bullet::Bullet(float direction, float x, float y)
 	this->x = x;
 	this->y = y;
 	this->direction = direction;
+	map_bullet[int(x / 200)][int(y / 200)] = 1;
 }
 
 Bullet::~Bullet()
@@ -31,7 +32,7 @@ Bullet::~Bullet()
 void Bullet::draw() {
 	//rotation();
 	glBindVertexArray(VertexArrayID);
-	glm::mat4 Model = glm::translate(glm::mat4(1.0), glm::vec3(x, y, 0))*
+	glm::mat4 Model = glm::translate(glm::mat4(1.0), glm::vec3(x, y, 150.0f))*
 		/*scale     */	glm::scale(glm::mat4(1.0f), glm::vec3(10.0f))*
 		/*rotation */  glm::rotate(glm::mat4(1.0f), PI/180*direction, glm::vec3(0.0f, 0.0f, 1.0f)) *
 		/*translate*/  glm::rotate(glm::mat4(1.0f), PI / 180 * 90.0f, glm::vec3(0.0f,1.0f, 0.0f));
@@ -123,16 +124,16 @@ void Bullet::move() {
 	int x_fit, y_fit;
 
 	if (dir == 0.0f) {//up
-		this->x = this->x + 10.0f;
+		this->x = this->x + 200.0f;
 	}
 	else if (dir == 90.f) {//down
-		this->y = this->y + 10.0f;
+		this->y = this->y + 200.0f;
 	}
 	else if (dir == 180.0f) {//left
-		this->x = this->x- 10.0f;
+		this->x = this->x- 200.0f;
 	}
 	else if (dir == 270.0f){//right
-		this->y = this->y - 10.0f;
+		this->y = this->y - 200.0f;
 	}
 
 	x_fit = int(this->x / 200);
