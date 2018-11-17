@@ -101,7 +101,7 @@ void keyboard(unsigned char key, int x, int y) {
 	switch (key) {
 	case 'w':
 		Player::player.
-		Player::player.forward();
+			Player::player.forward();
 		break;
 
 	case 'a':
@@ -115,9 +115,6 @@ void keyboard(unsigned char key, int x, int y) {
 	case 'q':
 		third_person_view = !third_person_view;
 		break;
-	case ' ':
-		Player::player.bulletLoad();
-		printf("bulletload");
 	}
 	printf("%f\n", Player::player.direction);
 	glutPostRedisplay();
@@ -163,6 +160,15 @@ void init() {
 	Item::initMap();
 	glutSwapBuffers();
 }
+
+void mouse(int button, int state, int x, int y) {
+	if (state == GLUT_DOWN && button == GLUT_LEFT_BUTTON) {
+		Player::player.bulletLoad();
+		Player::vertexArrayID = Player::vertexArrayIDs[9];
+	}
+	else if (state == GLUT_UP && button == GLUT_LEFT_BUTTON)
+		Player::vertexArrayID = Player::vertexArrayIDs[0];
+}
 void main(int argc, char **argv) {  	
 	glutInit(&argc, argv); 
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA);  
@@ -172,6 +178,7 @@ void main(int argc, char **argv) {
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
 	glutKeyboardFunc(keyboard);
+	glutMouseFunc(mouse);
 	//glutTimerFunc(0, timer, 0);
 	glutTimerFunc(10, update, 0);
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f); 
