@@ -50,8 +50,11 @@ void GameManager::checkGameOver() {
 }
 
 void GameManager::lifeUpdate() {
-	if (Player::player.enemyCollision())
+	if (Player::player.prev_collision == 0 && Player::player.enemyCollision()) {
 		life--;
+		Player::player.prev_collision == 1;
+	}
+	Player::player.prev_collision = Player::player.enemyCollision();
 	return;
 }
 

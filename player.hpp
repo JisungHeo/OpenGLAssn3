@@ -26,4 +26,5 @@ public:
 	bool enemyCollision();
 	bool doing;//to prevent multiple call at once.
 	bool* itemlist;
+	bool prev_collision;
 };

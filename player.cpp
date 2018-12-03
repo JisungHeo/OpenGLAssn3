@@ -20,6 +20,7 @@ Player::Player(float x, float y) {
 	this->itemlist = (bool *)malloc(2 * sizeof(bool));//item inventory can hold 2 items
 	itemlist[0] = false;
 	itemlist[1] = false;
+	prev_collision = false;
 }
 
 GLuint Player::vertexArrayID;
