@@ -27,4 +27,5 @@ public:
 	bool doing;//to prevent multiple call at once.
 	bool* itemlist;
 	bool prev_collision;
+	static GLuint Texture;
 };

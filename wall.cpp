@@ -12,9 +12,10 @@ extern GLuint ColorID;
 extern GLuint TextureID;
 extern GLuint TextureExistID;
 vector<Wall> Wall::vectorWall;
-Wall::Wall(float x, float y) {
+Wall::Wall(float x, float y, float z) {
 	this->x = x;
 	this->y = y;
+	this->z = z;
 }
 
 glm::vec3 Wall::vertices[8] = { glm::vec3(0,0,0),glm::vec3(200,0,0),glm::vec3(200,200,0),glm::vec3(0,200,0),
@@ -69,7 +70,7 @@ GLuint Wall::Texture;
 void Wall::draw() {
 	glBindVertexArray(vertexArrayID);
 	glm::mat4 Model;
-	Model = glm::translate(glm::mat4(1.0f), glm::vec3(x, y, 0));
+	Model = glm::translate(glm::mat4(1.0f), glm::vec3(x, y, z));
 	glUniformMatrix4fv(ModelID, 1, GL_FALSE, &Model[0][0]);
 	glUniform4f(ColorID, 0.0f, 0.0f, 0.0f, 1.0f);
 	glActiveTexture(GL_TEXTURE0);
@@ -122,7 +123,7 @@ void verticalWall(int i, int j, int n) {
 }
 
 void Wall::initMap() {
-	/*for (int i = 0; i < ArrSize; i++) {
+	for (int i = 0; i < ArrSize; i++) {
 		map_wall[i][0] = map_wall[0][i] = map_wall[i][ArrSize-1] = map_wall[ArrSize-1][i] = 1;
 	}
 	for (int i=0;i<4;i++)
@@ -135,12 +136,15 @@ void Wall::initMap() {
 			verticalWall(i * 25 + 3, j * 25 + 15, 7);
 			verticalWall(i * 25 + 15, j * 25 + 9, 7);
 			verticalWall(i * 25 + 15, j * 25 + 15, 7);
-		}*/
+		}
 	map_wall[50][53] = 1;
 	for (int i = 0; i < ArrSize; i++)
-		for (int j = 0; j < ArrSize; j++)
+		for (int j = 0; j < ArrSize; j++) {
 			if (map_wall[i][j])
-				Wall::vectorWall.push_back(Wall(i*CellSize, j*CellSize));
+				Wall::vectorWall.push_back(Wall(i*CellSize, j*CellSize, 0 * CellSize));
+			//Ground
+			Wall::vectorWall.push_back(Wall(i*CellSize, j*CellSize, -1 * CellSize));
+		}
 }
 
 void Wall::drawAll() {

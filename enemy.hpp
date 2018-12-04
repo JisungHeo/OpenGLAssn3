@@ -37,6 +37,7 @@ public:
 	int action;//0: stationary, 1: forward, 2:rotate
 	int frame;
 	void move_step();
+	static GLuint Texture;
 };
 
 enum direction { UP, DOWN, RIGHT, LEFT };

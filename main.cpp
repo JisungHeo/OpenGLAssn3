@@ -71,7 +71,7 @@ glm::mat4 cameraMove() {
 void drawEntity() {
 	Player::player.draw();
 	Wall::drawAll();
-	Enemy::drawAll();
+	//Enemy::drawAll();
 	Item::drawAll();
 	Bullet::drawAll();
 	drawStatusBar();
@@ -81,7 +81,9 @@ void display() {
 	if (!GameManager::game_over) { // if game is not over.
 		
 		glViewport(0, 0.2*height, width, 0.8*height);
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+		glEnable(GL_DEPTH_TEST);
+		glDepthFunc(GL_LESS);
 		
 		glUseProgram(programID);
 		glm::mat4 Projection = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 5000.0f);

@@ -6,7 +6,7 @@
 #include "player.hpp"
 #include "map.hpp"
 #include "gamemanager.hpp"
-
+#include "texture.hpp"
 #define CellSize 200
 #define ArrSize 100
 #define PI 3.141592f
@@ -16,6 +16,8 @@
 //Player player = Player(50 * 200 + 100, 50 * 200 + 100);
 extern GLuint ModelID;
 extern GLuint ColorID;
+extern GLuint TextureID;
+extern GLuint TextureExistID;
 extern bool map_enemy[ArrSize][ArrSize];
 extern bool map_wall[ArrSize][ArrSize];
 extern bool map_bullet[ArrSize][ArrSize];
@@ -35,6 +37,7 @@ Enemy::Enemy(float x, float y) {
 
 GLuint Enemy::vertexArrayID;
 int Enemy::dummy_obj_size;
+GLuint Enemy::Texture;
 void Enemy::draw() {
 	glBindVertexArray(vertexArrayID);
 	glm::mat4 Model = glm::translate(glm::mat4(1.0f), glm::vec3(x,y, 0.0f)) *
@@ -43,9 +46,14 @@ void Enemy::draw() {
 		glm::rotate(glm::mat4(1.0f), PI / 180 * 90.0f, glm::vec3(1, 0, 0));
 	glUniformMatrix4fv(ModelID, 1, GL_FALSE, &Model[0][0]);
 	glUniform4f(ColorID, 1.0f, 0.0f, 0.0f, 1.0f);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, Enemy::Texture);
+	glUniform1i(TextureID, 0);
+	glUniform1i(TextureExistID, 1);
 	for (int i = 0; i < dummy_obj_size / 4; i++) {
-		glDrawArrays(GL_LINE_LOOP, i * 4, 4);
+		glDrawArrays(GL_TRIANGLE_FAN, i * 4, 4);
 	}
+	glUniform1i(TextureExistID, 0);
 	glBindVertexArray(0);
 }
 /*
@@ -79,6 +87,7 @@ void Enemy::initVAO() {
 	for (int i=0;i<9;i++)
 		vertexArrayIDs[i] = Player::vertexArrayIDs[i];
 	dummy_obj_size = Player::dummy_obj_size;
+	Enemy::Texture = loadDDS("obj_files/dummy_red.dds");
 	/*vector<glm::vec3> vertices;
 	vector<glm::vec2> uvs;
 	vector<glm::vec3> normals; // Won't be used at the moment.

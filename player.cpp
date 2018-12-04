@@ -2,6 +2,7 @@
 #include <glm/ext/matrix_transform.hpp>
 #include "objloader.hpp"
 #include <GL/glut.h>
+#include "texture.hpp"
 #define ArrSize 100
 #define CellSize 200
 #define PI 3.141592f
@@ -11,6 +12,8 @@ extern GLuint ModelID;
 extern bool map_wall[ArrSize][ArrSize];
 extern bool map_enemy[ArrSize][ArrSize];
 extern bool map_item[ArrSize][ArrSize];
+extern GLuint TextureID;
+extern GLuint TextureExistID;
 Player Player::player(0.0f,0.0f);
 Player::Player(float x, float y) {
 	this->x = x;
@@ -25,6 +28,7 @@ Player::Player(float x, float y) {
 
 GLuint Player::vertexArrayID;
 GLuint Player::vertexArrayIDs[10] = { 0 };
+GLuint Player::Texture;
 int Player::dummy_obj_size;
 void Player::draw() {
 	glBindVertexArray(vertexArrayID);
@@ -33,11 +37,17 @@ void Player::draw() {
 		glm::rotate(glm::mat4(1.0f), PI / 180 * 90.0f, glm::vec3(0, 0, 1)) *
 		glm::rotate(glm::mat4(1.0f), PI / 180 * 90.0f, glm::vec3(1, 0, 0));
 	glUniformMatrix4fv(ModelID, 1, GL_FALSE, &Model[0][0]);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, Player::Texture);
+	glUniform1i(TextureID, 0);
+	glUniform1i(TextureExistID, 1);
 	for (int i = 0; i < dummy_obj_size / 4; i++) {
-		glDrawArrays(GL_LINE_LOOP, i * 4, 4);
+		glDrawArrays(GL_TRIANGLE_FAN, i * 4, 4);
 	}
+	glUniform1i(TextureExistID, 0);
 	glBindVertexArray(0);
 }
+
 void Player::initVAO() {
 	char path[100];
 	for (int i=0; i < NUM_FRAME+2; i++) {
@@ -64,9 +74,26 @@ void Player::initVAO() {
 			0,                  // stride
 			(void*)0            // array buffer 
 		);
+		GLuint uvbuffer;
+		glGenBuffers(1, &uvbuffer);
+		glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
+		uvs.size();
+		&uvs[0];
+		glBufferData(GL_ARRAY_BUFFER, uvs.size() * sizeof(glm::vec2), &uvs[0], GL_STATIC_DRAW);
+
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(
+			1,                  // attribute
+			2,                  // size
+			GL_FLOAT,           // type
+			GL_FALSE,           // normalized?
+			0,                  // stride
+			(void*)0            // array buffer 
+		);
 		dummy_obj_size = vertices.size();
 	}
 	vertexArrayID = vertexArrayIDs[0];
+	Player::Texture = loadDDS("obj_files/dummy_wood.dds");
 }
 
 
