@@ -133,9 +133,16 @@ void Enemy::initMap() {
 			if(map_enemy[i][j])
 				Enemy::vectorEnemy.push_back(Enemy(i*CellSize+CellSize/2, j*CellSize+CellSize/2));
 }
+bool isVisible(Enemy enemy) {
+	if (abs(enemy.x / CellSize - Player::player.x / CellSize) < 15 && abs(enemy.x / CellSize - Player::player.x / CellSize) < 15)
+		return true;
+	else
+		return false;
+}
 void Enemy::drawAll() {
 	for (int i = 0; i < vectorEnemy.size(); i++)
-		vectorEnemy[i].draw();
+		if(isVisible(vectorEnemy[i]))
+			vectorEnemy[i].draw();
 }
 
 bool Enemy::wallCollision(int x, int y)

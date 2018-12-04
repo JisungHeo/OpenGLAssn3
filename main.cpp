@@ -71,7 +71,7 @@ glm::mat4 cameraMove() {
 void drawEntity() {
 	Player::player.draw();
 	Wall::drawAll();
-	//Enemy::drawAll();
+	Enemy::drawAll();
 	Item::drawAll();
 	Bullet::drawAll();
 	drawStatusBar();
@@ -86,7 +86,7 @@ void display() {
 		glDepthFunc(GL_LESS);
 		
 		glUseProgram(programID);
-		glm::mat4 Projection = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 5000.0f);
+		glm::mat4 Projection = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 3000.0f);
 		glm::mat4 View = cameraMove();
 		glUniformMatrix4fv(ProjectionID, 1, GL_FALSE, &Projection[0][0]);
 		glUniformMatrix4fv(ViewID, 1, GL_FALSE, &View[0][0]);
