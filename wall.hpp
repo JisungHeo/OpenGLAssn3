@@ -12,6 +12,8 @@ public:
 	float y;
 	static glm::vec3 vertices[8];
 	static int indices[24];
+	static float uv[48];
+	static GLuint Texture;
 	static glm::vec3 out_vertices[24];
 	static GLuint vertexArrayID;
 	void draw();

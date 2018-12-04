@@ -17,6 +17,7 @@
 #include "statusbar.hpp"
 #include "gamemanager.hpp"
 #include <cmath>
+#include "texture.hpp"
 #define CellSize 200
 #define PI 3.141592f
 using namespace std;
@@ -28,6 +29,8 @@ GLuint ProjectionID;
 GLuint ViewID;
 GLuint ModelID;
 GLuint ColorID;
+GLuint TextureID;
+GLuint TextureExistID;
 GLuint VertexArrayID;
 GLuint vertexbuffer;
 unsigned int dummy_obj_size;
@@ -76,8 +79,10 @@ void drawEntity() {
 
 void display() {
 	if (!GameManager::game_over) { // if game is not over.
+		
 		glViewport(0, 0.2*height, width, 0.8*height);
 		glClear(GL_COLOR_BUFFER_BIT);
+		
 		glUseProgram(programID);
 		glm::mat4 Projection = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 5000.0f);
 		glm::mat4 View = cameraMove();
@@ -85,6 +90,7 @@ void display() {
 		glUniformMatrix4fv(ViewID, 1, GL_FALSE, &View[0][0]);
 
 		glUniform4f(ColorID, 0.0f, 1.0f, 0.0f, 1.0f);
+		
 		drawEntity();
 		glutSwapBuffers();
 	}
@@ -155,7 +161,8 @@ void init() {
 	ViewID = glGetUniformLocation(programID, "View");
 	ModelID = glGetUniformLocation(programID, "Model");
 	ColorID = glGetUniformLocation(programID, "fragmentColor");
-	
+	TextureID = glGetUniformLocation(programID, "myTextureSampler");
+	TextureExistID = glGetUniformLocation(programID, "textureExist");
 	Player::initVAO();
 	Enemy::initVAO();
 	Wall::initVAO();
