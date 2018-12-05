@@ -3,7 +3,7 @@
 #include <string.h>
 
 #include <GL/glew.h>
-
+#define _CRT_SECURE_NO_WARNINGS
 
 
 GLuint loadBMP_custom(const char * imagepath){
@@ -19,7 +19,8 @@ GLuint loadBMP_custom(const char * imagepath){
 	unsigned char * data;
 
 	// Open the file
-	FILE * file = fopen(imagepath,"rb");
+	FILE * file;
+	fopen_s(&file, imagepath, "rb");
 	if (!file){
 		printf("%s could not be opened. Are you in the right directory ? Don't forget to read the FAQ !\n", imagepath);
 		getchar();
@@ -130,7 +131,7 @@ GLuint loadDDS(const char * imagepath){
 	FILE *fp; 
  
 	/* try to open the file */ 
-	fp = fopen(imagepath, "rb"); 
+	fopen_s(&fp, imagepath, "rb"); 
 	if (fp == NULL){
 		printf("%s could not be opened. Are you in the right directory ? Don't forget to read the FAQ !\n", imagepath); getchar(); 
 		return 0;
