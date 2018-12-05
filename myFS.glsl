@@ -3,6 +3,7 @@
 in vec3 fN;
 in vec2 TexCoords;
 in vec4 vPosition;
+in vec3 FragPos;
 struct Material {
 	sampler2D diffuse;
 	sampler2D specular;
@@ -34,7 +35,7 @@ uniform mat4 Model;
 
 uniform vec4 lightColor;
 uniform PointLight pointLights[2];
-uniform DirLight dirLight;
+//uniform DirLight dirLight;
 uniform Material material;
 uniform vec3 viewPos;
 vec3 CalcDirLight(DirLight light, vec3 N, vec3 pos);
@@ -51,8 +52,8 @@ void main()
 
 	//Point light
 	//for(int i = 0; i < 2; i++)
-		output2 += CalcPointLight(pointLights[0], N, pos);  
-		output2 += CalcPointLight(pointLights[1], N, pos);  
+	output2 += CalcPointLight(pointLights[0], N, pos);  
+	//output2 += CalcPointLight(pointLights[1], N, pos);  
 	gl_FragColor = vec4(output2, 1.0) * lightColor;
 } 
 
@@ -91,7 +92,7 @@ vec3 CalcPointLight(PointLight light, vec3 N, vec3 pos)
     float spec = pow(max(dot(R,V), 0.0), material.shininess);
 
     // attenuation
-    float distance   = length(light.position - pos);
+    float distance   = length(light.position - FragPos);
     float attenuation = min(1.0 / (light.constant + light.linear * distance + 
   			     light.quadratic * (distance * distance)),1.0);    
 
@@ -102,7 +103,7 @@ vec3 CalcPointLight(PointLight light, vec3 N, vec3 pos)
 
 	if ( dot(L, N) < 0.0 ) 
 		specular = vec3(0.0, 0.0, 0.0);
-    return (ambient + diffuse + specular);// * attenuation;
+    return (ambient + diffuse + specular) * attenuation;
 }
 
 

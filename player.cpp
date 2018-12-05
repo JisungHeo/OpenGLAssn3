@@ -44,7 +44,7 @@ void Player::draw() {
 	glUniform1i(TextureID, 0);
 	glUniform1i(TextureExistID, 1);
 	glUniform1i(glGetUniformLocation(programID, "material.diffuse"), 0);
-	glUniform1i(glGetUniformLocation(programID, "material.specular"), 1);
+	glUniform1i(glGetUniformLocation(programID, "material.specular"), 0);
 	glUniform1f(glGetUniformLocation(programID, "material.shininess"), 32.0f);
 	
 	for (int i = 0; i < dummy_obj_size / 4; i++) {

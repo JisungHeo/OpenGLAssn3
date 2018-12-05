@@ -18,6 +18,7 @@ extern GLuint ModelID;
 extern GLuint ColorID;
 extern GLuint TextureID;
 extern GLuint TextureExistID;
+extern GLuint programID;
 extern bool map_enemy[ArrSize][ArrSize];
 extern bool map_wall[ArrSize][ArrSize];
 extern bool map_bullet[ArrSize][ArrSize];
@@ -50,6 +51,9 @@ void Enemy::draw() {
 	glBindTexture(GL_TEXTURE_2D, Enemy::Texture);
 	glUniform1i(TextureID, 0);
 	glUniform1i(TextureExistID, 1);
+	glUniform1i(glGetUniformLocation(programID, "material.diffuse"), 0);
+	glUniform1i(glGetUniformLocation(programID, "material.specular"), 0);
+	glUniform1f(glGetUniformLocation(programID, "material.shininess"), 32.0f);
 	for (int i = 0; i < dummy_obj_size / 4; i++) {
 		glDrawArrays(GL_TRIANGLE_FAN, i * 4, 4);
 	}
