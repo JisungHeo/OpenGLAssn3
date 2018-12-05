@@ -92,12 +92,40 @@ void display() {
 		glUniformMatrix4fv(ProjectionID, 1, GL_FALSE, &Projection[0][0]);
 		glUniformMatrix4fv(ViewID, 1, GL_FALSE, &View[0][0]);
 
+		//dir light
 		glUniform4f(ColorID, 0.0f, 1.0f, 0.0f, 1.0f);
 		glUniform4f(glGetUniformLocation(programID, "lightColor"), 1.0f, 1.0f, 1.0f, 1.0f);
+		/*
 		glUniform3f(glGetUniformLocation(programID, "dirLight.direction"), -1.0f, -1.0f, -1.0f);
 		glUniform3f(glGetUniformLocation(programID, "dirLight.ambient"), 0.2f, 0.2f, 0.2f);
 		glUniform3f(glGetUniformLocation(programID, "dirLight.diffuse"), 1.0f, 1.0f, 1.0f);
 		glUniform3f(glGetUniformLocation(programID, "dirLight.specular"), 1.0f, 1.0f, 1.0f);
+		*/
+		//points light
+		glm::mat4 rotateMatrix = glm::rotate(glm::mat4(1.0f), PI / 180 * Player::player.direction, glm::vec3(0, 0, 1));
+		float light_x = (float)Player::player.x;
+		float light_y = (float)Player::player.y;
+		float light_z = 100.0f;
+		//glm::vec4 point_0 =  glm::vec4(10000.0f, 10000.0f, light_z, 1.0f);
+		glm::vec4 point_0= rotateMatrix * glm::vec4(light_x - 20.0, light_y, light_z,1.0f);
+		glm::vec4 point_1 = rotateMatrix * glm::vec4(light_x + 20.0 , light_y, light_z, 1.0f);
+
+		glUniform3f(glGetUniformLocation(programID, "pointLights[0].position"), point_0.x, point_0.y, point_0.z);
+		glUniform3f(glGetUniformLocation(programID, "pointLights[0].ambient"), 0.2f, 0.2f, 0.2f);
+		glUniform3f(glGetUniformLocation(programID, "pointLights[0].diffuse"), 10.0f, 10.0f, 10.0f);
+		glUniform3f(glGetUniformLocation(programID, "pointLights[0].specular"), 1.0f, 1.0f, 1.0f);
+		glUniform1f(glGetUniformLocation(programID, "pointLights[0].constant"), 1.0f);
+		glUniform1f(glGetUniformLocation(programID, "pointLights[0].linear"), 0.09);
+		glUniform1f(glGetUniformLocation(programID, "pointLights[0].quadratic"), 0.032);
+			
+		glUniform3f(glGetUniformLocation(programID, "pointLights[1].position"), point_1.x, point_1.y, point_1.z);
+		glUniform3f(glGetUniformLocation(programID, "pointLights[1].ambient"), 0.2f, 0.2f, 0.2f);
+		glUniform3f(glGetUniformLocation(programID, "pointLights[1].diffuse"), 10.0f, 10.0f, 10.0f);
+		glUniform3f(glGetUniformLocation(programID, "pointLights[1].specular"), 1.0f, 1.0f, 1.0f);
+		glUniform1f(glGetUniformLocation(programID, "pointLights[1].constant"), 1.0f);
+		glUniform1f(glGetUniformLocation(programID, "pointLights[1].linear"), 0.09);
+		glUniform1f(glGetUniformLocation(programID, "pointLights[1].quadratic"), 0.032);
+
 		drawEntity();
 		glutSwapBuffers();
 	}

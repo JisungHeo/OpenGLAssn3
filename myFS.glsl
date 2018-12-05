@@ -102,7 +102,7 @@ vec3 CalcPointLight(PointLight light, vec3 N, vec3 pos)
 
 	if ( dot(L, N) < 0.0 ) 
 		specular = vec3(0.0, 0.0, 0.0);
-    return (ambient + diffuse + specular) * attenuation;
+    return (ambient + diffuse + specular);// * attenuation;
 }
 
 
