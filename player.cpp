@@ -14,6 +14,7 @@ extern bool map_enemy[ArrSize][ArrSize];
 extern bool map_item[ArrSize][ArrSize];
 extern GLuint TextureID;
 extern GLuint TextureExistID;
+extern GLuint programID;
 Player Player::player(0.0f,0.0f);
 Player::Player(float x, float y) {
 	this->x = x;
@@ -30,6 +31,7 @@ GLuint Player::vertexArrayID;
 GLuint Player::vertexArrayIDs[10] = { 0 };
 GLuint Player::Texture;
 int Player::dummy_obj_size;
+
 void Player::draw() {
 	glBindVertexArray(vertexArrayID);
 	glm::mat4 Model = glm::translate(glm::mat4(1.0f), glm::vec3(x, y, 0)) *
@@ -41,6 +43,10 @@ void Player::draw() {
 	glBindTexture(GL_TEXTURE_2D, Player::Texture);
 	glUniform1i(TextureID, 0);
 	glUniform1i(TextureExistID, 1);
+	glUniform1i(glGetUniformLocation(programID, "material.diffuse"), 0);
+	glUniform1i(glGetUniformLocation(programID, "material.specular"), 1);
+	glUniform1f(glGetUniformLocation(programID, "material.shininess"), 32.0f);
+	
 	for (int i = 0; i < dummy_obj_size / 4; i++) {
 		glDrawArrays(GL_TRIANGLE_FAN, i * 4, 4);
 	}
@@ -77,14 +83,26 @@ void Player::initVAO() {
 		GLuint uvbuffer;
 		glGenBuffers(1, &uvbuffer);
 		glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
-		uvs.size();
-		&uvs[0];
 		glBufferData(GL_ARRAY_BUFFER, uvs.size() * sizeof(glm::vec2), &uvs[0], GL_STATIC_DRAW);
 
 		glEnableVertexAttribArray(1);
 		glVertexAttribPointer(
 			1,                  // attribute
 			2,                  // size
+			GL_FLOAT,           // type
+			GL_FALSE,           // normalized?
+			0,                  // stride
+			(void*)0            // array buffer 
+		);
+		GLuint normalbuffer;
+		glGenBuffers(1, &normalbuffer);
+		glBindBuffer(GL_ARRAY_BUFFER, normalbuffer);
+		glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(glm::vec3), &normals[0], GL_STATIC_DRAW);
+
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(
+			2,                  // attribute
+			3,                  // size
 			GL_FLOAT,           // type
 			GL_FALSE,           // normalized?
 			0,                  // stride

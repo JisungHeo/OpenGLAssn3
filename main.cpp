@@ -63,6 +63,7 @@ glm::mat4 cameraMove() {
 	dhy = headVector.y;
 	dx = atVector.x;
 	dy = atVector.y;
+	glUniform3fv(glGetUniformLocation(programID, "viewPos"), 1, &glm::vec3(Player::player.x + dhx + dtx, Player::player.y + dhy + dty, 170.0f + dtz)[0]);
 	return glm::lookAt(glm::vec3(Player::player.x+dhx+dtx, Player::player.y+dhy+dty, 170.0f+dtz),
 		glm::vec3(Player::player.x+dx, Player::player.y+dy, 169.0f),
 		glm::vec3(0.0f, 0.0f, 1.0f));
@@ -71,10 +72,10 @@ glm::mat4 cameraMove() {
 void drawEntity() {
 	Player::player.draw();
 	Wall::drawAll();
-	Enemy::drawAll();
-	Item::drawAll();
-	Bullet::drawAll();
-	drawStatusBar();
+	//Enemy::drawAll();
+	//Item::drawAll();
+	//Bullet::drawAll();
+	//drawStatusBar();
 }
 
 void display() {
@@ -92,7 +93,11 @@ void display() {
 		glUniformMatrix4fv(ViewID, 1, GL_FALSE, &View[0][0]);
 
 		glUniform4f(ColorID, 0.0f, 1.0f, 0.0f, 1.0f);
-		
+		glUniform4f(glGetUniformLocation(programID, "lightColor"), 1.0f, 1.0f, 1.0f, 1.0f);
+		glUniform3f(glGetUniformLocation(programID, "dirLight.direction"), 0.0f, 100.0f, 0.0f);
+		glUniform3f(glGetUniformLocation(programID, "dirLight.ambient"), 0.2f, 0.2f, 0.2f);
+		glUniform3f(glGetUniformLocation(programID, "dirLight.diffuse"), 100.0f, 100.0f, 100.0f);
+		glUniform3f(glGetUniformLocation(programID, "dirLight.specular"), 1.0f, 1.0f, 1.0f);
 		drawEntity();
 		glutSwapBuffers();
 	}

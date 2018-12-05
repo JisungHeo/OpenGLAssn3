@@ -11,6 +11,7 @@ extern GLuint ModelID;
 extern GLuint ColorID;
 extern GLuint TextureID;
 extern GLuint TextureExistID;
+extern GLuint programID;
 vector<Wall> Wall::vectorWall;
 Wall::Wall(float x, float y, float z) {
 	this->x = x;
@@ -64,6 +65,15 @@ GLfloat Wall::uv[48] = {
 	0.0f,1.0f,
 };
 
+GLfloat Wall::normals[72] = {
+	0.0f,0.0f,-1.0f, 0.0f,0.0f,-1.0f, 0.0f,0.0f,-1.0f, 0.0f,0.0f,-1.0f,
+	1.0f,0.0f,0.0f, 1.0f,0.0f,0.0f, 1.0f,0.0f,0.0f, 1.0f,0.0f,0.0f,
+	0.0f,0.0f,1.0f, 0.0f,0.0f,1.0f, 0.0f,0.0f,1.0f, 0.0f,0.0f,1.0f,
+	-1.0f,0.0f,0.0f, -1.0f,0.0f,0.0f, -1.0f,0.0f,0.0f, -1.0f,0.0f,0.0f,
+	0.0f,-1.0f,0.0f, 0.0f,-1.0f,0.0f, 0.0f,-1.0f,0.0f, 0.0f,-1.0f,0.0f,
+	0.0f,1.0f,0.0f, 0.0f,1.0f,0.0f, 0.0f,1.0f,0.0f, 0.0f,1.0f,0.0f
+};
+
 glm::vec3 Wall::out_vertices[24];
 GLuint Wall::Texture;
 
@@ -77,6 +87,9 @@ void Wall::draw() {
 	glBindTexture(GL_TEXTURE_2D, Wall::Texture);
 	glUniform1i(TextureID, 0);
 	glUniform1i(TextureExistID, 1);
+	glUniform1i(glGetUniformLocation(programID, "material.diffuse"), 0);
+	glUniform1i(glGetUniformLocation(programID, "material.specular"), 1);
+	glUniform1f(glGetUniformLocation(programID, "material.shininess"), 32.0f);
 	for (int i = 0; i < 24 / 4; i++) {
 		glDrawArrays(GL_TRIANGLE_FAN, i*4, 4);
 	}
@@ -105,6 +118,13 @@ void Wall::initVAO() {
 	glBufferData(GL_ARRAY_BUFFER, sizeof(uv), uv, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+	GLuint normalbuffer;
+	glGenBuffers(1, &normalbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, normalbuffer);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(normals), normals, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
 
 	Wall::Texture = loadDDS("diffuse.DDS");

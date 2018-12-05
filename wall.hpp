@@ -22,4 +22,5 @@ public:
 	static void initMap();
 	static vector<Wall> vectorWall;
 	static void drawAll();
+	static GLfloat normals[72];
 };
