@@ -1,41 +1,54 @@
 #version 440 core
-// myFS.glsl
-/*uniform vec4 fragmentColor;
-
-void main()
-{
-    gl_FragColor = fragmentColor;
-}*/
- 
-#version 440 core
-in vec3 fN;
-in vec3 fE;
+in vec4 vPosition;
+in vec3 vNormal;
+flat out vec4 color; 
 
 uniform mat4 View;
 uniform mat4 Model;
 uniform vec4 fragmentColor; //objectColor
 
 uniform vec4 lightColor;
-uniform PointLight pointLights[NR_POINT_LIGHTS];
+uniform PointLight pointLights[2];
 uniform DirLight dirLight;
-uniform vec3 viewPos;
+uniform vec3 viewPos; //camera position
 
 void main()
 {
-	// Normalize the input lighting vectors
+	// Transform vertex position into eye coordinates
 	vec3 pos = (View*Model* vPosition).xyz;
-	vec3 N = normalize(fN);
-
+	vec3 V = normalize(viewPos - pos);
+	vec3 N = normalize( View *Model* vec4(vNormal, 0.0) ).xyz;
+	
 	vec3 output = vec3(0.0);
 	//Direct light
-	output += CalcDirLight(dirLight, N, pos);
+	output += CalcDirLight(dirLight, N,pos);
 
 	//Point light
 	for(int i = 0; i < 2; i++)
-		output += CalcPointLight(pointLights[i], N);  
+  		output += CalcPointLight(pointLights[i], N,pos);  
+	color = vec4(output, 1.0) * lightColor * fragmentColor;
 
-	gl_FragColor = vec4(output, 1.0) * fragmentColor * lightColor;
-} 
+/*	//light
+	vec4 lightColor = (¹¹·ÎÇÏÁö); //**
+	//ambient
+	float ambientStrength = 10; //**
+	vec4 ambient = ambientStrength;
+	
+	//diffuse
+	float Kd = max( dot(L, N), 0.0 );
+	vec4 diffuse = Kd * lightColor;
+
+	//specular
+	int Shininess=10; //**
+	float Ks = pow( max(dot(N, H), 0.0), Shininess );
+	vec4 specular = Ks *specularStrength;
+	if ( dot(L, N) < 0.0 ) 
+		specular = vec4(0.0, 0.0, 0.0);
+
+	gl_Position = Projection * View * Model * vPosition;
+	color = (ambient + diffuse + specular) *lightColor* fragmentColor;
+	color.a = 1.0; //**??*/
+}
 
 struct DirLight {
     vec3 direction; //position
@@ -99,28 +112,8 @@ vec3 CalcPointLight(PointLight light, vec3 N, vec3 pos)
     vec3 ambient  = light.ambient  * vec3(texture(material.diffuse, TexCoords));
     vec3 diffuse  = light.diffuse  * diff * vec3(texture(material.diffuse, TexCoords));
     vec3 specular = light.specular * spec * vec3(texture(material.specular, TexCoords));
-    ambient  *= attenuation;
-    diffuse  *= attenuation;
-    specular *= attenuation;
 
 	if ( dot(L, N) < 0.0 ) 
 		specular = vec3(0.0, 0.0, 0.0);
-    return (ambient + diffuse + specular);
-}
-
-
-/*
-in vec2 UV;
-out vec3 color;
-uniform vec4 fragmentColor;
-uniform sampler2D myTextureSampler;
-uniform int textureExist;
-void main()
-{
-	if(textureExist==1)
-		color = texture(myTextureSampler,UV).rgb;
-	else
-		color = fragmentColor.rgb;
-		//gl_FragColor = fragmentColor;
-	
-}*/
+    return (ambient + diffuse + specular) * attenuation;
+} 

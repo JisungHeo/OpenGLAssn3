@@ -148,7 +148,7 @@ void update(int time) {
 		Item::update();
 		Enemy::update();
 		GameManager::timeUpdate();
-		GameManager::lifeUpdate();
+		//GameManager::lifeUpdate();
 	}
 	GameManager::checkGameOver();
 	glutTimerFunc(50, update, time++);

@@ -323,5 +323,6 @@ void Enemy::update() {
 	for (int i = 0; i < vectorEnemy.size(); i++) {
 		vectorEnemy[i].move_step();
 	}
+	GameManager::lifeUpdate();
 	glutPostRedisplay();
 }
