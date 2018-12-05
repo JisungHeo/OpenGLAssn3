@@ -35,7 +35,7 @@ uniform mat4 Model;
 
 uniform vec4 lightColor;
 uniform PointLight pointLights[2];
-//uniform DirLight dirLight;
+uniform DirLight dirLight;
 uniform Material material;
 uniform vec3 viewPos;
 vec3 CalcDirLight(DirLight light, vec3 N, vec3 pos);
@@ -43,17 +43,16 @@ vec3 CalcPointLight(PointLight light, vec3 N, vec3 pos);
 void main()
 {
 	// Normalize the input lighting vectors
-	vec3 pos = (View*Model* vPosition).xyz;
+	//vec3 pos = (View*Model* vPosition).xyz;
 	vec3 N = normalize(fN);
 
 	vec3 output2 = vec3(0.0);
 	//Direct light
-	//output2 += CalcDirLight(dirLight, N, pos);
+	output2 += CalcDirLight(dirLight, N, FragPos);
 
 	//Point light
-	//for(int i = 0; i < 2; i++)
-	output2 += CalcPointLight(pointLights[0], N, pos);  
-	//output2 += CalcPointLight(pointLights[1], N, pos);  
+	output2 += CalcPointLight(pointLights[0], N, FragPos);  
+	output2 += CalcPointLight(pointLights[1], N, FragPos);  
 	gl_FragColor = vec4(output2, 1.0) * lightColor;
 } 
 
@@ -92,7 +91,7 @@ vec3 CalcPointLight(PointLight light, vec3 N, vec3 pos)
     float spec = pow(max(dot(R,V), 0.0), material.shininess);
 
     // attenuation
-    float distance   = length(light.position - FragPos);
+    float distance   = length(light.position - pos);
     float attenuation = min(1.0 / (light.constant + light.linear * distance + 
   			     light.quadratic * (distance * distance)),1.0);    
 

@@ -76,7 +76,7 @@ void drawEntity() {
 	Enemy::drawAll();
 	Item::drawAll();
 	Bullet::drawAll();
-	//drawStatusBar();
+	drawStatusBar();
 }
 
 void display() {
@@ -96,12 +96,11 @@ void display() {
 		//dir light
 		glUniform4f(ColorID, 0.0f, 1.0f, 0.0f, 1.0f);
 		glUniform4f(glGetUniformLocation(programID, "lightColor"), 1.0f, 1.0f, 1.0f, 1.0f);
-		/*
 		glUniform3f(glGetUniformLocation(programID, "dirLight.direction"), -1.0f, -1.0f, -1.0f);
-		glUniform3f(glGetUniformLocation(programID, "dirLight.ambient"), 0.2f, 0.2f, 0.2f);
-		glUniform3f(glGetUniformLocation(programID, "dirLight.diffuse"), 1.0f, 1.0f, 1.0f);
+		glUniform3f(glGetUniformLocation(programID, "dirLight.ambient"), 0.1f, 0.1f, 0.1f);
+		glUniform3f(glGetUniformLocation(programID, "dirLight.diffuse"), 0.5f, 0.5f, 0.5f);
 		glUniform3f(glGetUniformLocation(programID, "dirLight.specular"), 1.0f, 1.0f, 1.0f);
-		*/
+		
 		//points light
 		glm::mat4 rotateMatrix = glm::rotate(glm::mat4(1.0f), PI / 180 * Player::player.direction, glm::vec3(0, 0, 1));
 		float light_x = (float)Player::player.x;
@@ -111,23 +110,25 @@ void display() {
 		//glm::vec4 point_0 =  glm::vec4(10000.0f, 10000.0f, light_z, 1.0f);
 		glm::vec4 point_0= rotateMatrix * glm::vec4(light_x, light_y, light_z,1.0f);
 		glm::vec4 point_1 = rotateMatrix * glm::vec4(light_x , light_y, light_z, 1.0f);
-		glm::vec4 offset = rotateMatrix * glm::vec4(0,20,100,0);
-		glUniform3f(glGetUniformLocation(programID, "pointLights[0].position"),-10.0f, -10.0f, -100.0f);
-		glUniform3f(glGetUniformLocation(programID, "pointLights[0].ambient"), 0.0f, 0.0f, 0.0f);
+		glm::vec4 offset = rotateMatrix * glm::vec4(200,100,60,0);
+		//glUniformMatrix4fv(glGetUniformLocation(programID, "rotateMatrix"), 1, GL_FALSE, &rotateMatrix[0][0]);
+		glUniform3f(glGetUniformLocation(programID, "pointLights[0].position"), light_x + offset[0], light_y + offset[1], light_z + offset[2]);
+		glUniform3f(glGetUniformLocation(programID, "pointLights[0].ambient"), 0.2f, 0.2f, 0.2f);
 		glUniform3f(glGetUniformLocation(programID, "pointLights[0].diffuse"), 1.0f, 1.0f, 1.0f);
-		glUniform3f(glGetUniformLocation(programID, "pointLights[0].specular"), 1.0f, 1.0f, 1.0f);
+		glUniform3f(glGetUniformLocation(programID, "pointLights[0].specular"), 1.0f, 1.0f,1.0f);
 		glUniform1f(glGetUniformLocation(programID, "pointLights[0].constant"), 1.0f);
-		glUniform1f(glGetUniformLocation(programID, "pointLights[0].linear"), 0.000009);
-		glUniform1f(glGetUniformLocation(programID, "pointLights[0].quadratic"), 0.00000000032);
-			
-		/*glUniform3f(glGetUniformLocation(programID, "pointLights[1].position"), light_x + offset[0], light_y + offset[1], light_z + offset[2]);
+		glUniform1f(glGetUniformLocation(programID, "pointLights[0].linear"), 0.0009);
+		glUniform1f(glGetUniformLocation(programID, "pointLights[0].quadratic"), 0.0000032);
+		
+		offset = rotateMatrix * glm::vec4(200, -100, 60, 0);
+		glUniform3f(glGetUniformLocation(programID, "pointLights[1].position"), light_x + offset[0], light_y + offset[1], light_z + offset[2]);
 		glUniform3f(glGetUniformLocation(programID, "pointLights[1].ambient"), 0.2f, 0.2f, 0.2f);
 		glUniform3f(glGetUniformLocation(programID, "pointLights[1].diffuse"), 1.0f, 1.0f, 1.0f);
 		glUniform3f(glGetUniformLocation(programID, "pointLights[1].specular"), 1.0f, 1.0f, 1.0f);
 		glUniform1f(glGetUniformLocation(programID, "pointLights[1].constant"), 1.0f);
-		glUniform1f(glGetUniformLocation(programID, "pointLights[1].linear"), 0.000009);
-		glUniform1f(glGetUniformLocation(programID, "pointLights[1].quadratic"), 0.00000000032);
-		*/
+		glUniform1f(glGetUniformLocation(programID, "pointLights[1].linear"), 0.0009);
+		glUniform1f(glGetUniformLocation(programID, "pointLights[1].quadratic"), 0.0000032);
+		
 		drawEntity();
 		glutSwapBuffers();
 	}

@@ -45,6 +45,10 @@ void Enemy::draw() {
 		glm::rotate(glm::mat4(1.0f), PI / 180 * direction, glm::vec3(0, 0, 1)) *
 		glm::rotate(glm::mat4(1.0f), PI / 180 * 90.0f, glm::vec3(0, 0, 1)) *
 		glm::rotate(glm::mat4(1.0f), PI / 180 * 90.0f, glm::vec3(1, 0, 0));
+	glm::mat4 rotateMatrix = glm::rotate(glm::mat4(1.0f), PI / 180 * direction, glm::vec3(0, 0, 1)) *
+		glm::rotate(glm::mat4(1.0f), PI / 180 * 90.0f, glm::vec3(0, 0, 1)) *
+		glm::rotate(glm::mat4(1.0f), PI / 180 * 90.0f, glm::vec3(1, 0, 0));
+	glUniformMatrix4fv(glGetUniformLocation(programID, "rotateMatrix"), 1, GL_FALSE, &rotateMatrix[0][0]);
 	glUniformMatrix4fv(ModelID, 1, GL_FALSE, &Model[0][0]);
 	glUniform4f(ColorID, 1.0f, 0.0f, 0.0f, 1.0f);
 	glActiveTexture(GL_TEXTURE0);
@@ -59,6 +63,7 @@ void Enemy::draw() {
 	}
 	glUniform1i(TextureExistID, 0);
 	glBindVertexArray(0);
+	glUniformMatrix4fv(glGetUniformLocation(programID, "rotateMatrix"), 1, GL_FALSE, &glm::mat4(1.0f)[0][0]);
 }
 /*
 void Enemy::draw2() {
