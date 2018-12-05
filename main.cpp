@@ -72,9 +72,9 @@ glm::mat4 cameraMove() {
 void drawEntity() {
 	Player::player.draw();
 	Wall::drawAll();
-	//Enemy::drawAll();
-	//Item::drawAll();
-	//Bullet::drawAll();
+	Enemy::drawAll();
+	Item::drawAll();
+	Bullet::drawAll();
 	//drawStatusBar();
 }
 
@@ -94,9 +94,9 @@ void display() {
 
 		glUniform4f(ColorID, 0.0f, 1.0f, 0.0f, 1.0f);
 		glUniform4f(glGetUniformLocation(programID, "lightColor"), 1.0f, 1.0f, 1.0f, 1.0f);
-		glUniform3f(glGetUniformLocation(programID, "dirLight.direction"), 0.0f, 100.0f, 0.0f);
+		glUniform3f(glGetUniformLocation(programID, "dirLight.direction"), -1.0f, -1.0f, -1.0f);
 		glUniform3f(glGetUniformLocation(programID, "dirLight.ambient"), 0.2f, 0.2f, 0.2f);
-		glUniform3f(glGetUniformLocation(programID, "dirLight.diffuse"), 100.0f, 100.0f, 100.0f);
+		glUniform3f(glGetUniformLocation(programID, "dirLight.diffuse"), 1.0f, 1.0f, 1.0f);
 		glUniform3f(glGetUniformLocation(programID, "dirLight.specular"), 1.0f, 1.0f, 1.0f);
 		drawEntity();
 		glutSwapBuffers();

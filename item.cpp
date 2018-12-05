@@ -52,7 +52,7 @@ void Item::draw() {
 	glUniformMatrix4fv(ModelID, 1, GL_FALSE, &Model[0][0]);
 	glUniform4f(ColorID, 0.0f, 0.0f, 1.0f, 1.0f);
 	for (int i = 0; i < verticesSize / 4; i++) {
-		glDrawArrays(GL_LINE_LOOP, i * 4, 4);
+		glDrawArrays(GL_TRIANGLE_FAN, i * 4, 4);
 	}
 	glBindVertexArray(0);
 }
