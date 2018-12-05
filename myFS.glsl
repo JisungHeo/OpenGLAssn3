@@ -106,4 +106,21 @@ vec3 CalcPointLight(PointLight light, vec3 N, vec3 pos)
 	if ( dot(L, N) < 0.0 ) 
 		specular = vec3(0.0, 0.0, 0.0);
     return (ambient + diffuse + specular);
-} 
+}
+
+
+/*
+in vec2 UV;
+out vec3 color;
+uniform vec4 fragmentColor;
+uniform sampler2D myTextureSampler;
+uniform int textureExist;
+void main()
+{
+	if(textureExist==1)
+		color = texture(myTextureSampler,UV).rgb;
+	else
+		color = fragmentColor.rgb;
+		//gl_FragColor = fragmentColor;
+	
+}*/
