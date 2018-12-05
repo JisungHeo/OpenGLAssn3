@@ -33,7 +33,7 @@ uniform mat4 Model;
 //uniform vec4 fragmentColor; //objectColor
 
 uniform vec4 lightColor;
-//uniform PointLight pointLights[2];
+uniform PointLight pointLights[2];
 uniform DirLight dirLight;
 uniform Material material;
 uniform vec3 viewPos;
@@ -47,12 +47,12 @@ void main()
 
 	vec3 output2 = vec3(0.0);
 	//Direct light
-	output2 += CalcDirLight(dirLight, N, pos);
+	//output2 += CalcDirLight(dirLight, N, pos);
 
 	//Point light
 	//for(int i = 0; i < 2; i++)
-	//	output2 += CalcPointLight(pointLights[i], N);  
-
+		output2 += CalcPointLight(pointLights[0], N, pos);  
+		output2 += CalcPointLight(pointLights[1], N, pos);  
 	gl_FragColor = vec4(output2, 1.0) * lightColor;
 } 
 
